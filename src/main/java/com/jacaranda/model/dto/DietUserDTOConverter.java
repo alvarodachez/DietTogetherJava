@@ -5,20 +5,19 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.jacaranda.model.DietUser;
 import com.jacaranda.model.DietUserRole;
 
-
-@Component
+@Service
 public class DietUserDTOConverter {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	public DietUser fromUserDTOToUser(DietUserDTO dto) {
-		DietUser user  = new DietUser();
+		DietUser user = new DietUser();
 		user.setUsername(dto.getUsername());
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
 		user.setRoles(Set.of(DietUserRole.USER));
@@ -26,9 +25,9 @@ public class DietUserDTOConverter {
 		user.setUpdateTime(LocalDateTime.now());
 		user.setLastPasswordChange(LocalDateTime.now());
 		return user;
-		
+
 	}
-	
+
 	public DietUserDTO fromUserToUserDTO(DietUser user) {
 		DietUserDTO dto = new DietUserDTO();
 		dto.setUsername(user.getUsername());

@@ -19,14 +19,14 @@ public class DietUserController {
 
 	@Autowired
 	private DietUserServiceImpl userService;
-	
+
 	@PostMapping("/")
 	private ResponseEntity<DietUser> createNewUser(@RequestBody DietUserDTO user) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(user));
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 }
