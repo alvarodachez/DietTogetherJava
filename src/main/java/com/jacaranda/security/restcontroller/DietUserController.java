@@ -1,4 +1,4 @@
-package com.jacaranda.restcontroller;
+package com.jacaranda.security.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.jacaranda.model.DietUser;
-import com.jacaranda.model.dto.DietUserDTO;
-import com.jacaranda.services.impl.DietUserServiceImpl;
+import com.jacaranda.security.model.DietUser;
+import com.jacaranda.security.model.dto.DietUserDTO;
+import com.jacaranda.security.services.impl.DietUserServiceImpl;
 
 @RestController
 @RequestMapping("/user")

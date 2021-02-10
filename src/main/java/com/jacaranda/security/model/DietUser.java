@@ -1,4 +1,4 @@
-package com.jacaranda.model;
+package com.jacaranda.security.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -13,6 +13,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,39 +23,38 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 @Entity
-@EntityListeners(AuditingEntityListener.class) 
-public class DietUser implements UserDetails{
+@EntityListeners(AuditingEntityListener.class)
+public class DietUser implements UserDetails {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(unique = true)
 	private String username;
-	
+
 	private String password;
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
-	private Set<DietUserRole> roles;
-	
+	private Set<DietRole> roles;
+
 	@CreatedDate
 	private LocalDateTime createTime;
-	
+
 	@UpdateTimestamp
 	private LocalDateTime updateTime;
-	
+
 	private LocalDateTime deleteTime;
-	
+
 	private LocalDateTime lastPasswordChange;
 
 	private static final long serialVersionUID = 2046866248113544418L;
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles.stream().map(ur -> new SimpleGrantedAuthority("ROLE_"+ur.name())).collect(Collectors.toList());
+		return roles.stream().map(ur -> new SimpleGrantedAuthority("ROLE_" + ur.name())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class DietUser implements UserDetails{
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return this.getDeleteTime()==null;
+		return this.getDeleteTime() == null;
 	}
 
 	@Override
@@ -95,11 +95,11 @@ public class DietUser implements UserDetails{
 		this.id = id;
 	}
 
-	public Set<DietUserRole> getRoles() {
+	public Set<DietRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<DietUserRole> roles) {
+	public void setRoles(Set<DietRole> roles) {
 		this.roles = roles;
 	}
 

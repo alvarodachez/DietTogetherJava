@@ -1,9 +1,9 @@
-package com.jacaranda.services;
+package com.jacaranda.security.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.jacaranda.model.DietUser;
-import com.jacaranda.model.dto.DietUserDTO;
+import com.jacaranda.security.model.DietUser;
+import com.jacaranda.security.model.dto.DietUserDTO;
 
 public interface DietUserServiceI {
 

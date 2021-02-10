@@ -1,8 +1,8 @@
-package com.jacaranda.model.dto;
+package com.jacaranda.security.model.dto;
 
 import java.util.Set;
 
-import com.jacaranda.model.DietUserRole;
+import com.jacaranda.security.model.DietRole;
 
 
 public class DietUserDTO {
@@ -11,7 +11,7 @@ private String username;
 	
 	private String password;
 	
-	private Set<DietUserRole> roles;
+	private Set<DietRole> roles;
 
 	public String getUsername() {
 		return username;
@@ -29,11 +29,11 @@ private String username;
 		this.password = password;
 	}
 
-	public Set<DietUserRole> getRoles() {
+	public Set<DietRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<DietUserRole> roles) {
+	public void setRoles(Set<DietRole> roles) {
 		this.roles = roles;
 	}
 }
