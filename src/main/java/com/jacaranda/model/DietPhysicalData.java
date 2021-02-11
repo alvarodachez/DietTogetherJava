@@ -9,9 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class DietPhysicalData implements Serializable {
@@ -56,7 +56,7 @@ public class DietPhysicalData implements Serializable {
 	 * @return the athleteId
 	 */
 	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name="athlete_id")
 	public DietAthlete getAthleteId() {
 		return athleteId;
 	}

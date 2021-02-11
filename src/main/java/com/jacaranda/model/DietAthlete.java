@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+import com.jacaranda.security.model.DietUser;
 
 @Entity
 public class DietAthlete implements Serializable {
@@ -26,7 +29,7 @@ public class DietAthlete implements Serializable {
 	private Long id;
 
 	/** Nombre de usuario relacionado con DietUser */
-	private String username;
+	
 
 	private String name;
 
@@ -76,19 +79,9 @@ public class DietAthlete implements Serializable {
 		this.id = id;
 	}
 
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
+	
 
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+
 
 	/**
 	 * @return the name

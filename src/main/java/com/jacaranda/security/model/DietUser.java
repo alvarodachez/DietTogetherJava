@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -15,6 +16,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +26,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.jacaranda.model.DietAthlete;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -35,6 +41,9 @@ public class DietUser implements UserDetails {
 	private String username;
 
 	private String password;
+	
+	
+	//private DietAthlete athlete;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
@@ -63,9 +72,24 @@ public class DietUser implements UserDetails {
 	}
 
 	@Override
+	@Column(name="username")
 	public String getUsername() {
 		return this.username;
 	}
+
+//	/**
+//	 * @return the athlete
+//	 */
+//	public DietAthlete getAthlete() {
+//		return athlete;
+//	}
+//
+//	/**
+//	 * @param athlete the athlete to set
+//	 */
+//	public void setAthlete(DietAthlete athlete) {
+//		this.athlete = athlete;
+//	}
 
 	@Override
 	public boolean isAccountNonExpired() {

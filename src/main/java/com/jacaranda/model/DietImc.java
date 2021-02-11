@@ -1,11 +1,7 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -69,7 +66,7 @@ public class DietImc implements Serializable {
 	 * @return the physicalDataId
 	 */
 	@OneToOne(fetch=FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name="physicalData_id")
 	public DietPhysicalData getPhysicalDataId() {
 		return physicalDataId;
 	}
@@ -86,7 +83,7 @@ public class DietImc implements Serializable {
 	 * @return the registerId
 	 */
 	@OneToOne(fetch=FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name="register_id")
 	public DietRegister getRegisterId() {
 		return registerId;
 	}
