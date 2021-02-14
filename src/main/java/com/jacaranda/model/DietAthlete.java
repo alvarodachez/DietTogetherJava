@@ -29,8 +29,9 @@ public class DietAthlete implements Serializable {
 	private Long id;
 
 	/** Nombre de usuario relacionado con DietUser */
-	
-
+//	@OneToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "user_id")
+//	private DietUser userId;
 	private String name;
 
 	private String surname;
@@ -79,9 +80,19 @@ public class DietAthlete implements Serializable {
 		this.id = id;
 	}
 
-	
-
-
+	/**
+	 * @return the userId
+	 */
+//	public DietUser getUserId() {
+//		return userId;
+//	}
+//
+//	/**
+//	 * @param userId the userId to set
+//	 */
+//	public void setUserId(DietUser userId) {
+//		this.userId = userId;
+//	}
 
 	/**
 	 * @return the name

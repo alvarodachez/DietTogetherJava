@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.model.dto.DietUserDTO;
 import com.jacaranda.security.services.impl.DietUserServiceImpl;
 
@@ -20,13 +19,19 @@ public class DietUserController {
 	@Autowired
 	private DietUserServiceImpl userService;
 
-	@PostMapping("/")
-	private ResponseEntity<DietUser> createNewUser(@RequestBody DietUserDTO user) {
+	@PostMapping("/sign-up")
+	public ResponseEntity<DietUserDTO> signUp(@RequestBody DietUserDTO userDTO) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(user));
-		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(userDTO));
+		}catch(Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<DietUserDTO> login(@RequestBody DietUserDTO userDTO){
+		// Created only to retrieve the Bearer token once authenticated
+		return ResponseEntity.status(HttpStatus.OK).body(userDTO);
 	}
 
 }

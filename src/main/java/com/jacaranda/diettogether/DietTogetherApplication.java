@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = { "com.jacaranda.restcontroller", "com.jacaranda.services",
 		"com.jacaranda.services.impl", "com.jacaranda.model.dto", "com.jacaranda.security",
-		"com.jacaranda.security.services", "com.jacaranda.security.services.impl", "com.jacaranda.security.model.dto", "com.jacaranda.security.model" })
+		"com.jacaranda.security.services", "com.jacaranda.security.services.impl", "com.jacaranda.security.model.dto",
+		"com.jacaranda.security.model", "com.jacaranda.security.common", "com.jacaranda.security.filter", "com.jacaranda.security.filter.jwt" })
 @EntityScan(basePackages = { "com.jacaranda.model", "com.jacaranda.security.model" })
 @EnableJpaRepositories(basePackages = { "com.jacaranda.repository", "com.jacaranda.security.repository" })
 public class DietTogetherApplication {
