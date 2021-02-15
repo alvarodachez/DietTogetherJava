@@ -9,10 +9,10 @@ import com.jacaranda.security.model.DietRole;
 @JsonInclude(Include.NON_NULL)
 public class DietUserDTO {
 
-private String username;
-	
+	private String username;
+
 	private String password;
-	
+
 	private Set<DietRole> roles;
 
 	public String getUsername() {

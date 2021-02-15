@@ -20,9 +20,6 @@ public class DietPhysicalData implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	
-	
-	private DietAthlete athleteId;
 
 	private Double weight;
 
@@ -50,23 +47,6 @@ public class DietPhysicalData implements Serializable {
 		this.id = id;
 	}
 	
-	
-
-	/**
-	 * @return the athleteId
-	 */
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="athlete_id")
-	public DietAthlete getAthleteId() {
-		return athleteId;
-	}
-
-	/**
-	 * @param athleteId the athleteId to set
-	 */
-	public void setAthleteId(DietAthlete athleteId) {
-		this.athleteId = athleteId;
-	}
 
 	/**
 	 * @return the weight
@@ -99,7 +79,8 @@ public class DietPhysicalData implements Serializable {
 	/**
 	 * @return the imc
 	 */
-	@OneToOne(fetch = FetchType.LAZY,mappedBy ="physicalDataId", cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(name="imc_id")
 	public DietImc getImc() {
 		return imc;
 	}
@@ -131,6 +112,12 @@ public class DietPhysicalData implements Serializable {
 	 */
 	public DietRegister getLastRegister() {
 		return lastRegister;
+	}
+	
+	public void imcCalculation() {
+		Double imc = this.weight/(this.height*this.height);
+		
+		this.imc.setImcValue(imc);
 	}
 
 	/**

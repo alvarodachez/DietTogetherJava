@@ -155,7 +155,8 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the physicalData
 	 */
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "athleteId", cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(name="physical_data_id")
 	public DietPhysicalData getPhysicalData() {
 		return physicalData;
 	}

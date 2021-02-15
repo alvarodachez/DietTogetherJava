@@ -22,49 +22,43 @@ import com.jacaranda.security.filter.JWTAuthorizationFilter;
 import com.jacaranda.security.model.DietRole;
 import com.jacaranda.security.services.impl.DietUserServiceImpl;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JWTAuthorizationFilter jwtAuthorizationFilter;
-	
+
 	@Autowired
 	private DietUserServiceImpl userService;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-	    return super.authenticationManagerBean();
+		return super.authenticationManagerBean();
 	}
-	 
-	 
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-	       http.cors().and().csrf().disable().authorizeRequests()
-           					.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
-           					.antMatchers(HttpMethod.POST, SecurityConstants.LOG_IN).permitAll()
-           					.antMatchers(HttpMethod.GET, "/customer/*").hasRole(DietRole.USER.name())
-           					.antMatchers(HttpMethod.POST, "/customer/*").hasRole(DietRole.ADMIN.name())
-           					.anyRequest().authenticated()
-           				.and()
-           					.addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
-           					.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-           				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
+				.antMatchers(HttpMethod.POST, SecurityConstants.LOG_IN).permitAll()
+				.antMatchers(HttpMethod.GET, "/athlete/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.POST, "/athlete/sign-up-data/*").permitAll()
+				.antMatchers(HttpMethod.DELETE, "/athlete/*").hasRole(DietRole.USER.name()).anyRequest().authenticated()
+				.and().addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
+				.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class).sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-	
 
-
-
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-    }
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+	}
 
 }

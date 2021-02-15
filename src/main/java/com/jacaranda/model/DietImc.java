@@ -22,9 +22,6 @@ public class DietImc implements Serializable {
 	private Long id;
 
 	private Double imcValue;
-
-	private DietPhysicalData physicalDataId;
-	
 	
 	private DietRegister registerId;
 
@@ -60,22 +57,6 @@ public class DietImc implements Serializable {
 	 */
 	public void setImcValue(Double imcValue) {
 		this.imcValue = imcValue;
-	}
-
-	/**
-	 * @return the physicalDataId
-	 */
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="physicalData_id")
-	public DietPhysicalData getPhysicalDataId() {
-		return physicalDataId;
-	}
-
-	/**
-	 * @param physicalDataId the physicalDataId to set
-	 */
-	public void setPhysicalDataId(DietPhysicalData physicalDataId) {
-		this.physicalDataId = physicalDataId;
 	}
 
 	
