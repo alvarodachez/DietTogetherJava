@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -27,8 +26,6 @@ public class DietGroup implements Serializable {
 	
 	private List<DietAthlete> athletes;
 	
-	private DietAthlete athleteId;
-
 	private LocalDateTime expireDate;
 
 	private DietChallengeType challengeType;
@@ -66,7 +63,8 @@ public class DietGroup implements Serializable {
 	/**
 	 * @return the athletes
 	 */
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="groupId")
+	@OneToMany
+	@JoinColumn(name = "athletes_id")
 	public List<DietAthlete> getAthletes() {
 		return athletes;
 	}
@@ -76,23 +74,6 @@ public class DietGroup implements Serializable {
 	 */
 	public void setAthletes(List<DietAthlete> athletes) {
 		this.athletes = athletes;
-	}
-
-	
-	/**
-	 * @return the athleteId
-	 */
-	@ManyToOne
-	@JoinColumn(name="ATHLETE_ID")
-	public DietAthlete getAthleteId() {
-		return athleteId;
-	}
-
-	/**
-	 * @param athleteId the athleteId to set
-	 */
-	public void setAthleteId(DietAthlete athleteId) {
-		this.athleteId = athleteId;
 	}
 
 	/**
@@ -112,6 +93,7 @@ public class DietGroup implements Serializable {
 	/**
 	 * @return the challengeType
 	 */
+	@Column(name="challenge_type")
 	@Enumerated(EnumType.STRING)
 	public DietChallengeType getChallengeType() {
 		return challengeType;

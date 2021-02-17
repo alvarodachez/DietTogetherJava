@@ -20,8 +20,6 @@ public class DietPrivateActivity implements Serializable {
 
 	private String name;
 
-	private DietAthlete athleteId;
-
 	private LocalDateTime expireDate;
 
 	private Double weightObjective;
@@ -54,22 +52,6 @@ public class DietPrivateActivity implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return the athlete
-	 */
-	@ManyToOne
-	@JoinColumn
-	public DietAthlete getAthleteId() {
-		return athleteId;
-	}
-
-	/**
-	 * @param athlete the athlete to set
-	 */
-	public void setAthleteId(DietAthlete athlete) {
-		this.athleteId = athlete;
 	}
 
 	/**

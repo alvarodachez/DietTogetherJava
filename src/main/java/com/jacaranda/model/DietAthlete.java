@@ -1,13 +1,13 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,9 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-
-import com.jacaranda.security.model.DietUser;
 
 @Entity
 public class DietAthlete implements Serializable {
@@ -28,15 +25,11 @@ public class DietAthlete implements Serializable {
 	/** Id de la entidad en bbdd */
 	private Long id;
 
-	/** Nombre de usuario relacionado con DietUser */
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "user_id")
-//	private DietUser userId;
 	private String name;
 
 	private String surname;
 
-	private LocalDateTime birthDay;
+	private LocalDate birthDay;
 
 	private DietAthlete athleteFather;
 
@@ -52,15 +45,12 @@ public class DietAthlete implements Serializable {
 
 	private List<DietGroup> groups;
 
-	private DietGroup groupId;
-
 	private DietGroup actualGroup;
 
 	private List<DietPrivateActivity> privateActivities;
 
 	private DietPrivateActivity actualPrivateActivity;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "athleteId", cascade = CascadeType.ALL)
 	private DietRegime regime;
 
 	/**
@@ -79,20 +69,6 @@ public class DietAthlete implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	/**
-	 * @return the userId
-	 */
-//	public DietUser getUserId() {
-//		return userId;
-//	}
-//
-//	/**
-//	 * @param userId the userId to set
-//	 */
-//	public void setUserId(DietUser userId) {
-//		this.userId = userId;
-//	}
 
 	/**
 	 * @return the name
@@ -125,14 +101,14 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the birthDay
 	 */
-	public LocalDateTime getBirthDay() {
+	public LocalDate getBirthDay() {
 		return birthDay;
 	}
 
 	/**
 	 * @param birthDay the birthDay to set
 	 */
-	public void setBirthDay(LocalDateTime birthDay) {
+	public void setBirthDay(LocalDate birthDay) {
 		this.birthDay = birthDay;
 	}
 
@@ -228,7 +204,8 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the groups
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "athleteId")
+	@OneToMany
+	@JoinColumn(name = "group_id")
 	public List<DietGroup> getGroups() {
 		return groups;
 	}
@@ -241,24 +218,10 @@ public class DietAthlete implements Serializable {
 	}
 
 	/**
-	 * @return the groupId
-	 */
-	@ManyToOne
-	@JoinColumn(name = "GROUP_ID")
-	public DietGroup getGroupId() {
-		return groupId;
-	}
-
-	/**
-	 * @param groupId the groupId to set
-	 */
-	public void setGroupId(DietGroup groupId) {
-		this.groupId = groupId;
-	}
-
-	/**
 	 * @return the actualGroup
 	 */
+	@OneToOne   
+	@JoinColumn(name = "actual_group_id")
 	public DietGroup getActualGroup() {
 		return actualGroup;
 	}
@@ -273,7 +236,8 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the privateActivities
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "athleteId")
+	@OneToMany
+	@JoinColumn(name = "privateActivity_id")
 	public List<DietPrivateActivity> getPrivateActivities() {
 		return privateActivities;
 	}
@@ -288,6 +252,8 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the actualPrivateActivity
 	 */
+	@OneToOne   
+	@JoinColumn(name = "actual_privateActivity_id")
 	public DietPrivateActivity getActualPrivateActivity() {
 		return actualPrivateActivity;
 	}
@@ -302,6 +268,8 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the regime
 	 */
+	@OneToOne
+	@JoinColumn(name="regime_id")
 	public DietRegime getRegime() {
 		return regime;
 	}

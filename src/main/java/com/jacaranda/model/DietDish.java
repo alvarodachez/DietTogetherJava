@@ -1,7 +1,6 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ElementCollection;
@@ -12,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class DietDish implements Serializable {
@@ -26,12 +23,8 @@ public class DietDish implements Serializable {
 	private String name;
 
 	private String description;
-
-	private DietRegime regimeId;
-
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@Enumerated(EnumType.STRING)
-//	Set<DietCategory> categories;
+	
+	private Set<DietCategory> categories;
 
 	/**
 	 * @return the id
@@ -78,33 +71,19 @@ public class DietDish implements Serializable {
 	}
 
 	/**
-	 * @return the regimeId
+	 * @return the categories
 	 */
-	@ManyToOne
-	@JoinColumn
-	public DietRegime getRegimeId() {
-		return regimeId;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
+	public Set<DietCategory> getCategories() {
+		return categories;
 	}
 
 	/**
-	 * @param regimeId the regimeId to set
+	 * @param categories the categories to set
 	 */
-	public void setRegimeId(DietRegime regimeId) {
-		this.regimeId = regimeId;
+	public void setCategories(Set<DietCategory> categories) {
+		this.categories = categories;
 	}
-
-//	/**
-//	 * @return the categories
-//	 */
-//	public Set<DietCategory> getCategories() {
-//		return categories;
-//	}
-//
-//	/**
-//	 * @param categories the categories to set
-//	 */
-//	public void setCategories(Set<DietCategory> categories) {
-//		this.categories = categories;
-//	}
 
 }

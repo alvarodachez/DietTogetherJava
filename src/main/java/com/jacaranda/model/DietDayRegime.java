@@ -3,7 +3,10 @@ package com.jacaranda.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,16 +14,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
-public class DietRegime implements Serializable {
+public class DietDayRegime implements Serializable {
 
 	/** SERIAL ID */
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	public Long id;
 
-	private List<DietDish> dishes;
+	public DietDay day;
 
-	private List<DietDayRegime> days;
+	public List<DietMealRegime> meals;
 
 	/**
 	 * @return the id
@@ -39,36 +42,35 @@ public class DietRegime implements Serializable {
 	}
 
 	/**
-	 * @return the dishes
+	 * @return the day
 	 */
+	@Column(name="day")
+	@Enumerated(value = EnumType.STRING)
+	public DietDay getDay() {
+		return day;
+	}
 
+	/**
+	 * @param day the day to set
+	 */
+	public void setDay(DietDay day) {
+		this.day = day;
+	}
+
+	/**
+	 * @return the meals
+	 */
 	@OneToMany
-	@JoinColumn(name = "dish_id")
-	public List<DietDish> getDishes() {
-		return dishes;
+	@JoinColumn(name = "meal_id")
+	public List<DietMealRegime> getMeals() {
+		return meals;
 	}
 
 	/**
-	 * @param dishes the dishes to set
+	 * @param meals the meals to set
 	 */
-	public void setDishes(List<DietDish> dishes) {
-		this.dishes = dishes;
-	}
-
-	/**
-	 * @return the days
-	 */
-	@OneToMany
-	@JoinColumn(name = "day_id")
-	public List<DietDayRegime> getDays() {
-		return days;
-	}
-
-	/**
-	 * @param days the days to set
-	 */
-	public void setDays(List<DietDayRegime> days) {
-		this.days = days;
+	public void setMeals(List<DietMealRegime> meals) {
+		this.meals = meals;
 	}
 
 }
