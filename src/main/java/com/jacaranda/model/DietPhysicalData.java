@@ -24,7 +24,7 @@ public class DietPhysicalData implements Serializable {
 	private Double weight;
 
 	private Double height;
-	
+
 	private DietImc imc;
 
 	private List<DietRegister> registers;
@@ -46,7 +46,6 @@ public class DietPhysicalData implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 
 	/**
 	 * @return the weight
@@ -80,7 +79,7 @@ public class DietPhysicalData implements Serializable {
 	 * @return the imc
 	 */
 	@OneToOne
-	@JoinColumn(name="imc_id")
+	@JoinColumn(name = "imc_id")
 	public DietImc getImc() {
 		return imc;
 	}
@@ -95,7 +94,8 @@ public class DietPhysicalData implements Serializable {
 	/**
 	 * @return the registers
 	 */
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "physicalDataId")
+	@OneToMany
+	@JoinColumn(name = "register_id")
 	public List<DietRegister> getRegisters() {
 		return registers;
 	}
@@ -110,14 +110,10 @@ public class DietPhysicalData implements Serializable {
 	/**
 	 * @return the lastRegister
 	 */
+	@OneToOne
+	@JoinColumn(name = "lastRegister_id")
 	public DietRegister getLastRegister() {
 		return lastRegister;
-	}
-	
-	public void imcCalculation() {
-		Double imc = this.weight/(this.height*this.height);
-		
-		this.imc.setImcValue(imc);
 	}
 
 	/**
@@ -125,6 +121,12 @@ public class DietPhysicalData implements Serializable {
 	 */
 	public void setLastRegister(DietRegister lastRegister) {
 		this.lastRegister = lastRegister;
+	}
+
+	public void imcCalculation() {
+		Double imc = this.weight / (this.height * this.height);
+
+		this.imc.setImcValue(imc);
 	}
 
 }

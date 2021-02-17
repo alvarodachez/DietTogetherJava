@@ -1,17 +1,16 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
 public class DietImc implements Serializable {
@@ -22,12 +21,10 @@ public class DietImc implements Serializable {
 	private Long id;
 
 	private Double imcValue;
-	
-	private DietRegister registerId;
 
 	private DietScale actualScale;
 
-//	private Map<DietScale, Integer> scales = new LinkedHashMap();
+	private List<DietScaleImc> scales;
 
 	/**
 	 * @return the id
@@ -59,23 +56,6 @@ public class DietImc implements Serializable {
 		this.imcValue = imcValue;
 	}
 
-	
-	/**
-	 * @return the registerId
-	 */
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="register_id")
-	public DietRegister getRegisterId() {
-		return registerId;
-	}
-
-	/**
-	 * @param registerId the registerId to set
-	 */
-	public void setRegisterId(DietRegister registerId) {
-		this.registerId = registerId;
-	}
-
 	/**
 	 * @return the actualScale
 	 */
@@ -95,15 +75,20 @@ public class DietImc implements Serializable {
 	/**
 	 * @return the scales
 	 */
-//	public Map<DietScale, Integer> getScales() {
-//		return scales;
-//	}
-//
-//	/**
-//	 * @param scales the scales to set
-//	 */
-//	public void setScales(Map<DietScale, Integer> scales) {
-//		this.scales = scales;
-//	}
+	@OneToMany
+	@JoinColumn(name = "meal_id")
+	public List<DietScaleImc> getScales() {
+		return scales;
+	}
+
+	/**
+	 * @param scales the scales to set
+	 */
+	public void setScales(List<DietScaleImc> scales) {
+		this.scales = scales;
+	}
+
+
+	
 
 }

@@ -3,14 +3,11 @@ package com.jacaranda.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -26,8 +23,6 @@ public class DietRegister implements Serializable {
 	private LocalDateTime weightDate;
 
 	private DietImc imc;
-
-	private DietPhysicalData physicalDataId;
 
 	private Double weightDifference;
 
@@ -78,7 +73,8 @@ public class DietRegister implements Serializable {
 	/**
 	 * @return the imc
 	 */
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "registerId", cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(name = "imc_id")
 	public DietImc getImc() {
 		return imc;
 	}
@@ -88,22 +84,6 @@ public class DietRegister implements Serializable {
 	 */
 	public void setImc(DietImc imc) {
 		this.imc = imc;
-	}
-
-	/**
-	 * @return the physicalDataId
-	 */
-	@ManyToOne
-	@JoinColumn(name = "phisical_data_id")
-	public DietPhysicalData getPhysicalDataId() {
-		return physicalDataId;
-	}
-
-	/**
-	 * @param physicalDataId the physicalDataId to set
-	 */
-	public void setPhysicalDataId(DietPhysicalData physicalDataId) {
-		this.physicalDataId = physicalDataId;
 	}
 
 	/**
