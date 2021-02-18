@@ -1,6 +1,6 @@
 package com.jacaranda.model.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +12,7 @@ public class DietAthleteDTO {
 
 	private String surname;
 
-	private LocalDateTime birthDay;
+	private LocalDate birthDay;
 
 	private Double weight;
 
@@ -49,14 +49,14 @@ public class DietAthleteDTO {
 	/**
 	 * @return the birthDay
 	 */
-	public LocalDateTime getBirthDay() {
+	public LocalDate getBirthDay() {
 		return birthDay;
 	}
 
 	/**
 	 * @param birthDay the birthDay to set
 	 */
-	public void setBirthDay(LocalDateTime birthDay) {
+	public void setBirthDay(LocalDate birthDay) {
 		this.birthDay = birthDay;
 	}
 
