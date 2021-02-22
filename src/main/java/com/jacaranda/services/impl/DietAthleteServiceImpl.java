@@ -9,16 +9,21 @@ import org.springframework.stereotype.Service;
 
 import com.jacaranda.common.DietImcConstants;
 import com.jacaranda.model.DietAthlete;
+import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietImc;
+import com.jacaranda.model.DietMailBox;
 import com.jacaranda.model.DietPhysicalData;
 import com.jacaranda.model.DietPrivateActivity;
 import com.jacaranda.model.DietRegister;
+import com.jacaranda.model.DietRequestStatus;
 import com.jacaranda.model.DietScale;
 import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.model.dto.DietAthleteDTO;
 import com.jacaranda.repository.DietAthleteRepository;
+import com.jacaranda.repository.DietFriendRequestRepository;
 import com.jacaranda.repository.DietImcRepository;
+import com.jacaranda.repository.DietMailBoxRepository;
 import com.jacaranda.repository.DietPhysicalDataRepository;
 import com.jacaranda.repository.DietScaleImcRepository;
 import com.jacaranda.security.model.DietUser;
@@ -43,6 +48,19 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 	@Autowired
 	DietScaleImcRepository scaleImcRepo;
 
+	@Autowired
+	DietMailBoxRepository mailBoxRepo;
+
+	@Autowired
+	DietFriendRequestRepository friendRequestRepo;
+
+	@Override
+	public DietAthlete getAthlete(String username) {
+		DietUser user = userRepo.findByUsername(username).get();
+
+		return user.getAthleteId();
+	}
+
 	@Override
 	public DietAthlete signUpPrincipalData(String username, DietAthleteDTO athleteDto) {
 
@@ -58,6 +76,9 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		/** Creamos entidad imc que pertenece a los datos fisicos del atleta */
 		DietImc imc = new DietImc();
 
+		/** Creamos buzon de atleta */
+		DietMailBox mailBox = new DietMailBox();
+
 		/** Asignamos datos al atleta */
 		athlete.setName(athleteDto.getName());
 		athlete.setSurname(athleteDto.getSurname());
@@ -67,7 +88,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		athlete.setTotalWeightDifference(0.0);
 
 		/** Inicializando listas del atleta */
-		List<DietAthlete> friends = new ArrayList<DietAthlete>();
+		List<String> friends = new ArrayList<String>();
 		athlete.setFriends(friends);
 
 		List<DietGroup> groups = new ArrayList<DietGroup>();
@@ -91,7 +112,13 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 
 		imc.setActualScale(scaleCalculation(athleteDto.getWeight(), imc.getScales()));
 
+		/** Inicializamos lista de solicitudes de amistad al atleta */
+		List<DietFriendRequest> friendRequests = new ArrayList<DietFriendRequest>();
+		mailBox.setFriendRequests(friendRequests);
+
 		/** Guardamos entidades y asignamos las correspondientes entre ellas */
+		mailBoxRepo.save(mailBox);
+
 		imcRepo.save(imc);
 		physicalDataRepo.save(physicalData);
 		athleteRepo.save(athlete);
@@ -99,6 +126,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		physicalData.setImc(imc);
 		physicalDataRepo.save(physicalData);
 
+		athlete.setMailBox(mailBox);
 		athlete.setPhysicalData(physicalData);
 		athleteRepo.save(athlete);
 
@@ -106,6 +134,68 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		userRepo.save(user);
 
 		return user.getAthleteId();
+	}
+
+	@Override
+	public DietFriendRequest sendFriendRequest(String claimantUsername, String requestedUsername) {
+
+		DietUser claimantUser = userRepo.findByUsername(claimantUsername).get();
+		DietUser requestedUser = userRepo.findByUsername(requestedUsername).get();
+		DietFriendRequest friendRequest = new DietFriendRequest();
+
+		if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getAthleteId()))) {
+
+			friendRequest.setRequestDate(LocalDate.now());
+			friendRequest.setRequestStatus(DietRequestStatus.PENDING);
+			friendRequest.setClaimantAthlete(claimantUsername);
+			friendRequest.setRequestedAthlete(requestedUsername);
+
+			friendRequestRepo.save(friendRequest);
+
+			requestedUser.getAthleteId().getMailBox().getFriendRequests().add(friendRequest);
+
+			mailBoxRepo.save(requestedUser.getAthleteId().getMailBox());
+
+			athleteRepo.save(requestedUser.getAthleteId());
+
+			userRepo.save(requestedUser);
+		}
+
+		return friendRequest;
+	}
+
+	@Override
+	public DietFriendRequest acceptFriendRequest(Long id) {
+		DietFriendRequest request = friendRequestRepo.findById(id).get();
+		DietUser claimantUser = userRepo.findByUsername(request.getClaimantAthlete()).get();
+		DietUser requestedUser = userRepo.findByUsername(request.getRequestedAthlete()).get();
+
+		if (request.getRequestStatus() == DietRequestStatus.PENDING) {
+			request.setRequestStatus(DietRequestStatus.ACCEPTED);
+
+			friendRequestRepo.save(request);
+
+			claimantUser.getAthleteId().getFriends().add(requestedUser.getUsername());
+			athleteRepo.save(claimantUser.getAthleteId());
+			userRepo.save(claimantUser);
+			requestedUser.getAthleteId().getFriends().add(claimantUser.getUsername());
+			athleteRepo.save(requestedUser.getAthleteId());
+			userRepo.save(requestedUser);
+		}
+
+		return friendRequestRepo.findById(id).get();
+	}
+
+	@Override
+	public DietFriendRequest rejectFriendRequest(Long id) {
+
+		DietFriendRequest request = friendRequestRepo.findById(id).get();
+
+		request.setRequestStatus(DietRequestStatus.REJECTED);
+
+		friendRequestRepo.save(request);
+
+		return friendRequestRepo.findById(id).get();
 	}
 
 	/**
