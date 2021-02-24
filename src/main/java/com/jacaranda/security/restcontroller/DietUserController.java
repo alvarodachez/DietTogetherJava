@@ -1,5 +1,7 @@
 package com.jacaranda.security.restcontroller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +32,10 @@ public class DietUserController {
 		}
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<DietUserDTO> login(@RequestBody DietUserDTO userDTO){
+	@PostMapping("/logExample")
+	public ResponseEntity<?> login(@RequestBody DietUserDTO userDTO){
 		// Created only to retrieve the Bearer token once authenticated
-		return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+		return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(userDTO));
 	}
 
 }
