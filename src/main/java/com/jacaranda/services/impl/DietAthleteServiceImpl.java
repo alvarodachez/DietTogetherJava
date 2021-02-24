@@ -198,6 +198,12 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		return friendRequestRepo.findById(id).get();
 	}
 
+	@Override
+	public List<String> getAthleteFriends(String username) {
+		DietAthlete athlete = userRepo.findByUsername(username).get().getAthleteId();
+		return athlete.getFriends();
+	}
+
 	/**
 	 * Metodo que calcula la escala del imc en la que se encuentra el atleta segun
 	 * su peso

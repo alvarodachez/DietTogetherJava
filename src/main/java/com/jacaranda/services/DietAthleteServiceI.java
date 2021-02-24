@@ -1,5 +1,7 @@
 package com.jacaranda.services;
 
+import java.util.List;
+
 import com.jacaranda.model.DietAthlete;
 import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.dto.DietAthleteDTO;
@@ -15,4 +17,6 @@ public interface DietAthleteServiceI {
 	public DietFriendRequest acceptFriendRequest(Long id);
 	
 	public DietFriendRequest rejectFriendRequest(Long id);
+	
+	public List<String> getAthleteFriends(String username);
 }
