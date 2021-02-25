@@ -1,5 +1,7 @@
 package com.jacaranda.restcontroller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +55,17 @@ public class DietAthleteController {
 	public ResponseEntity<DietFriendRequest> rejectFriendRequest(@PathVariable("id") String id){
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(athleteService.rejectFriendRequest(Long.valueOf(id)));
+	}
+	
+	@GetMapping("/get-friends/{username}")
+	public ResponseEntity<List<String>> getAthleteFriends(@PathVariable("username")String username){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getAthleteFriends(username));
+	}
+	
+	@GetMapping("/get-friends-request/{username}")
+	public ResponseEntity<List<DietFriendRequest>> getFriendsRequests(@PathVariable("username")String username){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getFriendsRequests(username));
 	}
 }

@@ -10,4 +10,6 @@ public interface DietUserServiceI {
 	public UserDetails loadUserByUsername(String username);
 
 	public DietUserDTO createNewUser(DietUserDTO userDTO);
+	
+	public DietUserDTO loginUser(DietUserDTO userDTO);
 }

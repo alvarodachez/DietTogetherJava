@@ -12,11 +12,13 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.jacaranda.security.common.SecurityConstants;
 import com.jacaranda.security.model.DietUser;
@@ -24,6 +26,7 @@ import com.jacaranda.security.model.dto.DietUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebFilter
+@CrossOrigin(origins = "*")
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
 	private static AuthenticationManager authenticationManager;
@@ -53,8 +56,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
+
 		
+		
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Expose-Headers", "*");
+		response.addHeader("Content-Type", "application/json");
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + generateToken(((DietUser)authResult.getPrincipal())));
+        response.getWriter().write(generateToken(((DietUser)authResult.getPrincipal())));
 		
 	}
 	
