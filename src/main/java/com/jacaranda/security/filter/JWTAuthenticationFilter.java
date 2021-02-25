@@ -58,9 +58,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication authResult) throws IOException, ServletException {
 
 		
+		
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.addHeader("Access-Control-Expose-Headers", "*");
+		response.addHeader("Content-Type", "application/json");
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + generateToken(((DietUser)authResult.getPrincipal())));
+        response.getWriter().write(generateToken(((DietUser)authResult.getPrincipal())));
 		
 	}
 	
