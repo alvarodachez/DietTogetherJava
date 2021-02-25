@@ -19,4 +19,6 @@ public interface DietAthleteServiceI {
 	public DietFriendRequest rejectFriendRequest(Long id);
 	
 	public List<String> getAthleteFriends(String username);
+	
+	public List<DietFriendRequest> getFriendsRequests(String username);
 }
