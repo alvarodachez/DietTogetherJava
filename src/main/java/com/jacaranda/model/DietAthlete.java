@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class DietAthlete implements Serializable {
@@ -31,8 +34,6 @@ public class DietAthlete implements Serializable {
 
 	private LocalDate birthDay;
 
-	private DietAthlete athleteFather;
-
 	private DietPhysicalData physicalData;
 
 	private Double totalWeightDifference;
@@ -41,7 +42,7 @@ public class DietAthlete implements Serializable {
 
 	private Double totalPoints;
 
-	private List<DietAthlete> friends;
+	private List<String> friends;
 
 	private List<DietGroup> groups;
 
@@ -52,6 +53,8 @@ public class DietAthlete implements Serializable {
 	private DietPrivateActivity actualPrivateActivity;
 
 	private DietRegime regime;
+	
+	private DietMailBox mailBox;
 
 	/**
 	 * @return the id
@@ -110,22 +113,6 @@ public class DietAthlete implements Serializable {
 	 */
 	public void setBirthDay(LocalDate birthDay) {
 		this.birthDay = birthDay;
-	}
-
-	/**
-	 * @return the athleteFather
-	 */
-	@ManyToOne
-	@JoinColumn(name = "athlete_father", referencedColumnName = "athlete_id")
-	public DietAthlete getAthleteFather() {
-		return athleteFather;
-	}
-
-	/**
-	 * @param athleteFather the athleteFather to set
-	 */
-	public void setAthleteFather(DietAthlete athleteFather) {
-		this.athleteFather = athleteFather;
 	}
 
 	/**
@@ -189,15 +176,16 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the friends
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "athleteFather")
-	public List<DietAthlete> getFriends() {
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "athleteFather")
+	@ElementCollection
+	public List<String> getFriends() {
 		return friends;
 	}
 
 	/**
 	 * @param friends the friends to set
 	 */
-	public void setFriends(List<DietAthlete> friends) {
+	public void setFriends(List<String> friends) {
 		this.friends = friends;
 	}
 
@@ -280,5 +268,23 @@ public class DietAthlete implements Serializable {
 	public void setRegime(DietRegime regime) {
 		this.regime = regime;
 	}
+
+	/**
+	 * @return the mailBox
+	 */
+	@OneToOne
+	@JoinColumn(name="mailBox_id")
+	public DietMailBox getMailBox() {
+		return mailBox;
+	}
+
+	/**
+	 * @param mailBox the mailBox to set
+	 */
+	public void setMailBox(DietMailBox mailBox) {
+		this.mailBox = mailBox;
+	}
+	
+	
 
 }

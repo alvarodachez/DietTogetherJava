@@ -48,9 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable().authorizeRequests()
 				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
 				.antMatchers(HttpMethod.POST, SecurityConstants.LOG_IN).permitAll()
-				.antMatchers(HttpMethod.GET, "/athlete/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.GET, "/athlete/*").permitAll()
 				.antMatchers(HttpMethod.POST, "/athlete/sign-up-data/*").permitAll()
-				.antMatchers(HttpMethod.DELETE, "/athlete/*").hasRole(DietRole.USER.name()).anyRequest().authenticated()
+				.antMatchers(HttpMethod.POST, "/athlete/send-friend-request/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.POST, "/athlete/accept-friend-request/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.POST, "/athlete/reject-friend-request/*").hasRole(DietRole.USER.name())
 				.and().addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 				.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
