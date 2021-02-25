@@ -211,6 +211,20 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		
 		return userRepo.findByUsername(username).get().getAthleteId().getMailBox().getFriendRequests();
 	}
+	
+	
+
+	@Override
+	public List<String> getAthletesByInitials(String initials) {
+		List<DietUser> users = userRepo.findByInitials(initials);
+		
+		List<String> usernames = new ArrayList<String>();
+		
+		for(DietUser user : users) {
+			usernames.add(user.getUsername());
+		}
+		return usernames;
+	}
 
 	/**
 	 * Metodo que calcula la escala del imc en la que se encuentra el atleta segun
