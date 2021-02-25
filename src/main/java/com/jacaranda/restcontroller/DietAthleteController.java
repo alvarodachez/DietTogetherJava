@@ -62,4 +62,10 @@ public class DietAthleteController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getAthleteFriends(username));
 	}
+	
+	@GetMapping("/get-friends-request/{username}")
+	public ResponseEntity<List<DietFriendRequest>> getFriendsRequests(@PathVariable("username")String username){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getFriendsRequests(username));
+	}
 }
