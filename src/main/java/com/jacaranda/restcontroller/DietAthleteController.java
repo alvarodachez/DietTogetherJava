@@ -68,4 +68,9 @@ public class DietAthleteController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getFriendsRequests(username));
 	}
+	
+	@GetMapping("/get-athletes-by-initials/{initials}")
+	public ResponseEntity<List<String>> getAthletesByInitials(@PathVariable("initials")String initials){
+		return ResponseEntity.status(HttpStatus.OK).body(athleteService.getAthletesByInitials(initials));
+	}
 }
