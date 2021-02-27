@@ -23,11 +23,10 @@ public class DietGroupController {
 	@Autowired
 	DietGroupServiceI groupService;
 
-	@PostMapping("/create-group")
+	@PostMapping("/create-group/{username}")
 	public ResponseEntity<DietGroup> createGroup(@PathVariable String username, @RequestBody DietGroup group) {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(username, group));
-
 	}
 	
 	@PostMapping("/send-group-request/{claimant}&&{requested}")
