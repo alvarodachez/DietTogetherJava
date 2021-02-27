@@ -143,7 +143,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		DietUser requestedUser = userRepo.findByUsername(requestedUsername).get();
 		DietFriendRequest friendRequest = new DietFriendRequest();
 
-		if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getAthleteId()))) {
+		if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getUsername()))) {
 
 			friendRequest.setRequestDate(LocalDate.now());
 			friendRequest.setRequestStatus(DietRequestStatus.PENDING);
