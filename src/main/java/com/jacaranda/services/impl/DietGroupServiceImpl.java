@@ -55,6 +55,10 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		List<String> athletes = new ArrayList<String>();
 		athletes.add(user.getUsername());
 		groupToCreate.setAthletes(athletes);
+		
+		for(String requested:group.getAthletes()) {
+			this.sendGroupRequest(username, requested);
+		}
 
 		groupRepo.save(groupToCreate);
 
