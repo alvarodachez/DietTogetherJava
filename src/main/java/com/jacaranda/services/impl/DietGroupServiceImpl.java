@@ -54,7 +54,6 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 
 		List<String> athletes = new ArrayList<String>();
 		athletes.add(user.getUsername());
-		athletes.addAll(group.getAthletes());
 		groupToCreate.setAthletes(athletes);
 
 		groupRepo.save(groupToCreate);
@@ -156,5 +155,13 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		return groupRequestRepo.findById(id).get();
 
 	}
+
+	@Override
+	public List<DietGroupRequest> getGroupRequests(String username) {
+		
+		return userRepo.findByUsername(username).get().getAthleteId().getMailBox().getGroupRequests();
+	}
+	
+	
 
 }
