@@ -62,10 +62,10 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 
 		groupRepo.save(groupToCreate);
 
-		if (user.getAthleteId().getActualGroup() != null) {
+		if (user.getAthleteId().getActualGroup() != null && !(user.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE)) {
 			user.getAthleteId().getGroups().add(user.getAthleteId().getActualGroup());
 			user.getAthleteId().setActualGroup(groupToCreate);
-		} else {
+		} else if(user.getAthleteId().getActualGroup() ==null){
 			user.getAthleteId().setActualGroup(groupToCreate);
 		}
 
