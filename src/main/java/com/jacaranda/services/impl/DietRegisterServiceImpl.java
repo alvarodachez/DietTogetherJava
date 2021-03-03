@@ -1,6 +1,7 @@
 package com.jacaranda.services.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,21 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();
 	}
+	
+	
+
+	@Override
+	public List<DietRegister> getRegistersByUsername(String username) {
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		List<DietRegister> registers = new ArrayList<DietRegister>();
+		registers.add(user.getAthleteId().getPhysicalData().getLastRegister());
+		registers.addAll(user.getAthleteId().getPhysicalData().getRegisters());
+		
+		return registers;
+	}
+
+
 
 	private Double gamePointCalculation(DietScale actualScale) {
 
