@@ -28,89 +28,136 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 	@Autowired
 	DietAthleteRepository athleteRepo;
-	
+
 	@Autowired
 	DietPhysicalDataRepository physicalDataRepo;
-
+	
+	/**
+	 * En este metodo creamos el registro, y se actualizan los datos del atleta convenientes
+	 */
 	@Override
 	public DietRegister createRegister(String username, DietRegister register) {
 		DietUser user = userRepo.findByUsername(username).get();
-		
+
 		DietRegister registerToCreate = new DietRegister();
-		
+
+		// Se setean los datos obtenidos del front
 		registerToCreate.setWeight(register.getWeight());
 		registerToCreate.setWeightDate(LocalDate.now());
 
-		if(user.getAthleteId().getPhysicalData().getLastRegister() == null) {
-			
-			registerToCreate.setWeightDifference(user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight());
-			
+		// Comprobacion para ver si existia ya un registro anterior
+		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
+
+			// Al ser el primer registro se setea la diferencia de peso con el peso que puso el usuario al registrarse
+			registerToCreate.setWeightDifference(
+					user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight());
+
+			// Guardamos registro en la base de datos
 			registerRepo.save(registerToCreate);
-			
+
+			// Añadimos el registro como ultimo registro al atleta
 			user.getAthleteId().getPhysicalData().setLastRegister(registerToCreate);
-			
+
+			// Cambiamos el peso del atleta al nuevo registro
 			user.getAthleteId().getPhysicalData().setWeight(registerToCreate.getWeight());
-			
-			user.getAthleteId().getPhysicalData().getImc().setImcValue(registerToCreate.getWeight()/Math.pow(user.getAthleteId().getPhysicalData().getHeight(), 2));
-			
-			user.getAthleteId().getPhysicalData().getImc().setActualScale(this.scaleCalculation(registerToCreate.getWeight(),user.getAthleteId().getPhysicalData().getImc().getScales()));
-			
-			
-			
-			
-			
+
+			// Cambiamos el valor del imc del atlta con el nuevo valor del peso del registro
+			user.getAthleteId().getPhysicalData().getImc().setImcValue(
+					registerToCreate.getWeight() / Math.pow(user.getAthleteId().getPhysicalData().getHeight(), 2));
+
+			// Se calcula en que baremo esta el atleta tras el registro
+			user.getAthleteId().getPhysicalData().getImc().setActualScale(this.scaleCalculation(
+					registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
+
+			// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
+			user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+					+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000) / 100)
+							* this.gamePointCalculation(
+									user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+
+			// Se guardan los datos fisicos en base de datos
 			physicalDataRepo.save(user.getAthleteId().getPhysicalData());
-			
+
+			// Se guarda el atleta en base de datos
 			athleteRepo.save(user.getAthleteId());
-			
+
+			// Se guarda el usuario en base de datos
 			userRepo.save(user);
-			
-		}else {
+
+		} else {
+			// Se calcula una fecha una semana despues del ultimo registro
 			LocalDate dateLimit = user.getAthleteId().getPhysicalData().getLastRegister().getWeightDate().plusWeeks(1L);
-			
-			if(registerToCreate.getWeightDate().isAfter(dateLimit)) {
-				registerToCreate.setWeightDifference(user.getAthleteId().getPhysicalData().getLastRegister().getWeight() - registerToCreate.getWeight());
+
+			// Se hacen las operaciones si la fecha del registro es posterior a dateLimit
+			if (registerToCreate.getWeightDate().isAfter(dateLimit)) {
 				
+				// Se setea la diferencia de peso contando el ultimo registro 
+				registerToCreate.setWeightDifference(user.getAthleteId().getPhysicalData().getLastRegister().getWeight()
+						- registerToCreate.getWeight());
+
+				// Se guarda el registro en base de datos
 				registerRepo.save(registerToCreate);
-				
-				user.getAthleteId().getPhysicalData().getRegisters().add(user.getAthleteId().getPhysicalData().getLastRegister());
-				
+
+				// Se añade a la lista de registros el ultimo registro que existia
+				user.getAthleteId().getPhysicalData().getRegisters()
+						.add(user.getAthleteId().getPhysicalData().getLastRegister());
+
+				// Se sustituye el ultimo registro que existia por el nuevo
 				user.getAthleteId().getPhysicalData().setLastRegister(registerToCreate);
 				
+				// Cambiamos el peso del atleta al nuevo registro
+				user.getAthleteId().getPhysicalData().setWeight(registerToCreate.getWeight());
+
+				// Cambiamos el valor del imc del atlta con el nuevo valor del peso del registro
+				user.getAthleteId().getPhysicalData().getImc().setImcValue(
+						registerToCreate.getWeight() / Math.pow(user.getAthleteId().getPhysicalData().getHeight(), 2));
+
+				// Se calcula en que baremo esta el atleta tras el registro
+				user.getAthleteId().getPhysicalData().getImc().setActualScale(this.scaleCalculation(
+						registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
+
+				// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
+				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000) / 100)
+								* this.gamePointCalculation(
+										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+
+				// Se guardan los datos fisicos del atleta
 				physicalDataRepo.save(user.getAthleteId().getPhysicalData());
-				
+
+				// Se guarda el atleta en base de datos
 				athleteRepo.save(user.getAthleteId());
-				
+
+				// Se guarda el usuario en base de datos
 				userRepo.save(user);
-				
-				
+
 			}
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();
 	}
-	
+
 	private Double gamePointCalculation(DietScale actualScale) {
-		
+
 		Double res = 0.0;
-		if(actualScale == DietScale.NORMALWEIGHT) {
+		if (actualScale == DietScale.NORMALWEIGHT) {
 			res = DietImcConstants.NORMOPESO_POINTS;
-		}else if(actualScale == DietScale.OVERWEIGHT_ONE) {
+		} else if (actualScale == DietScale.OVERWEIGHT_ONE) {
 			res = DietImcConstants.SOBREPESO1_POINTS;
-		}else if(actualScale == DietScale.OVERWEIGHT_TWO) {
+		} else if (actualScale == DietScale.OVERWEIGHT_TWO) {
 			res = DietImcConstants.SOBREPESO2_POINTS;
-		}else if(actualScale == DietScale.OBESITY_ONE) {
+		} else if (actualScale == DietScale.OBESITY_ONE) {
 			res = DietImcConstants.OBESIDAD1_POINTS;
-		}else if(actualScale == DietScale.OBESITY_TWO) {
+		} else if (actualScale == DietScale.OBESITY_TWO) {
 			res = DietImcConstants.OBESIDAD2_POINTS;
-		}else if(actualScale == DietScale.OBESITY_THREE) {
+		} else if (actualScale == DietScale.OBESITY_THREE) {
 			res = DietImcConstants.OBESIDAD3_POINTS;
-		}else {
+		} else {
 			res = DietImcConstants.OBESIDAD4_POINTS;
 		}
-		
+
 		return res;
 	}
-	
+
 	private DietScale scaleCalculation(Double weight, List<DietScaleImc> scalesImc) {
 
 		/** Variable a devolver */
