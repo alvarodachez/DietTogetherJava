@@ -55,13 +55,17 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		List<String> athletes = new ArrayList<String>();
 		athletes.add(user.getUsername());
 		groupToCreate.setAthletes(athletes);
+		
+		for(String requested:group.getAthletes()) {
+			this.sendGroupRequest(username, requested);
+		}
 
 		groupRepo.save(groupToCreate);
 
-		if (user.getAthleteId().getActualGroup() != null) {
+		if (user.getAthleteId().getActualGroup() != null && !(user.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE)) {
 			user.getAthleteId().getGroups().add(user.getAthleteId().getActualGroup());
 			user.getAthleteId().setActualGroup(groupToCreate);
-		} else {
+		} else if(user.getAthleteId().getActualGroup() ==null){
 			user.getAthleteId().setActualGroup(groupToCreate);
 		}
 
@@ -155,5 +159,13 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		return groupRequestRepo.findById(id).get();
 
 	}
+
+	@Override
+	public List<DietGroupRequest> getGroupRequests(String username) {
+		
+		return userRepo.findByUsername(username).get().getAthleteId().getMailBox().getGroupRequests();
+	}
+	
+	
 
 }

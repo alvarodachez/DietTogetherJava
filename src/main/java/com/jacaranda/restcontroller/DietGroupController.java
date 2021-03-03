@@ -1,9 +1,12 @@
 package com.jacaranda.restcontroller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +26,10 @@ public class DietGroupController {
 	@Autowired
 	DietGroupServiceI groupService;
 
-	@PostMapping("/create-group")
+	@PostMapping("/create-group/{username}")
 	public ResponseEntity<DietGroup> createGroup(@PathVariable String username, @RequestBody DietGroup group) {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(username, group));
-
 	}
 	
 	@PostMapping("/send-group-request/{claimant}&&{requested}")
@@ -46,5 +48,11 @@ public class DietGroupController {
 	public ResponseEntity<DietGroupRequest> rejectGroupRequest(@PathVariable("id") String id){
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(groupService.rejectGroupRequest(Long.valueOf(id)));
+	}
+	
+	@GetMapping("/get-group-request/{username}")
+	public ResponseEntity<List<DietGroupRequest>> getGroupRequests(@PathVariable("username")String username){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(groupService.getGroupRequests(username));
 	}
 }
