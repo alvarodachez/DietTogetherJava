@@ -50,8 +50,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
 
 			// Al ser el primer registro se setea la diferencia de peso con el peso que puso el usuario al registrarse
-			registerToCreate.setWeightDifference(
-					user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight());
+			registerToCreate.setWeightDifference(Math.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight())*100.0)/100.0);
 
 			// Guardamos registro en la base de datos
 			registerRepo.save(registerToCreate);
