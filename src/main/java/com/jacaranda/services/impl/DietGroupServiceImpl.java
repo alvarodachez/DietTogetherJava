@@ -11,6 +11,7 @@ import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietGroupRequest;
 import com.jacaranda.model.DietRequestStatus;
+import com.jacaranda.model.dto.DietProgressBarDto;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietGroupRepository;
 import com.jacaranda.repository.DietGroupRequestRepository;
@@ -19,6 +20,8 @@ import com.jacaranda.security.model.DietRole;
 import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.repository.DietUserRepository;
 import com.jacaranda.services.DietGroupServiceI;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service("groupService")
 public class DietGroupServiceImpl implements DietGroupServiceI {
@@ -51,21 +54,23 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		groupToCreate.setExpireDate(group.getExpireDate());
 		groupToCreate.setChallengeType(group.getChallengeType());
 		groupToCreate.setEnabled(Boolean.TRUE);
+		groupToCreate.setCreationDate(LocalDate.now());
 
 		List<String> athletes = new ArrayList<String>();
 		athletes.add(user.getUsername());
 		groupToCreate.setAthletes(athletes);
-		
-		for(String requested:group.getAthletes()) {
+
+		for (String requested : group.getAthletes()) {
 			this.sendGroupRequest(username, requested);
 		}
 
 		groupRepo.save(groupToCreate);
 
-		if (user.getAthleteId().getActualGroup() != null && !(user.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE)) {
+		if (user.getAthleteId().getActualGroup() != null
+				&& !(user.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE)) {
 			user.getAthleteId().getGroups().add(user.getAthleteId().getActualGroup());
 			user.getAthleteId().setActualGroup(groupToCreate);
-		} else if(user.getAthleteId().getActualGroup() ==null){
+		} else if (user.getAthleteId().getActualGroup() == null) {
 			user.getAthleteId().setActualGroup(groupToCreate);
 		}
 
@@ -131,13 +136,14 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 				group.getAthletes().add(requestedUser.getUsername());
 
 				groupRepo.save(group);
-				
-				if(requestedUser.getAthleteId().getActualGroup() != null && requestedUser.getAthleteId().getActualGroup().getEnabled() == Boolean.FALSE) {
+
+				if (requestedUser.getAthleteId().getActualGroup() != null
+						&& requestedUser.getAthleteId().getActualGroup().getEnabled() == Boolean.FALSE) {
 					requestedUser.getAthleteId().getGroups().add(requestedUser.getAthleteId().getActualGroup());
-					
+
 					requestedUser.getAthleteId().setActualGroup(group);
-					
-				}else {
+
+				} else {
 					requestedUser.getAthleteId().setActualGroup(group);
 				}
 				athleteRepo.save(requestedUser.getAthleteId());
@@ -162,10 +168,44 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 
 	@Override
 	public List<DietGroupRequest> getGroupRequests(String username) {
-		
+
 		return userRepo.findByUsername(username).get().getAthleteId().getMailBox().getGroupRequests();
 	}
-	
-	
+
+	@Override
+	public DietProgressBarDto getProgressBar(String username) {
+
+		DietUser user = userRepo.findByUsername(username).get();
+
+		DietGroup group = user.getAthleteId().getActualGroup();
+
+		DietProgressBarDto progressBarInfo = new DietProgressBarDto();
+
+		// Obtencion de los dias restantes
+
+		long daysLeft = 0;
+
+		daysLeft = DAYS.between(LocalDate.now(), group.getExpireDate());
+
+		progressBarInfo.setDaysLeft(daysLeft);
+
+		// Obtencion del porcentaje transcurrido
+
+		long totalDays = 0;
+
+		long completedDays = 0;
+
+		Double percentage = 0.0;
+
+		totalDays = DAYS.between(group.getCreationDate(), group.getExpireDate());
+
+		completedDays = DAYS.between(group.getCreationDate(), LocalDate.now());
+
+		percentage = (completedDays / totalDays) * 100.0;
+
+		progressBarInfo.setTotalPercentage(percentage);
+
+		return progressBarInfo;
+	}
 
 }
