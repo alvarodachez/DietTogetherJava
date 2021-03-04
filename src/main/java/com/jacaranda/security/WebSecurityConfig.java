@@ -58,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/group/accept-group-request/*").hasRole(DietRole.USER.name())
 				.antMatchers(HttpMethod.POST, "/group/reject-group-request/*").hasRole(DietRole.USER.name())
 				.antMatchers(HttpMethod.POST, "/group/get-group-request/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.POST, "/register/create-register/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.GET, "/register/get-registers/*").hasRole(DietRole.USER.name())
 				.and().addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 				.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

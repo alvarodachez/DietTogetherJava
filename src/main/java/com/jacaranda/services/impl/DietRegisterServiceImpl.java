@@ -1,6 +1,7 @@
 package com.jacaranda.services.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
 
 			// Al ser el primer registro se setea la diferencia de peso con el peso que puso el usuario al registrarse
-			registerToCreate.setWeightDifference(
-					user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight());
+			registerToCreate.setWeightDifference(Math.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight())*100.0)/100.0);
 
 			// Guardamos registro en la base de datos
 			registerRepo.save(registerToCreate);
@@ -135,6 +135,21 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();
 	}
+	
+	
+
+	@Override
+	public List<DietRegister> getRegistersByUsername(String username) {
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		List<DietRegister> registers = new ArrayList<DietRegister>();
+		registers.add(user.getAthleteId().getPhysicalData().getLastRegister());
+		registers.addAll(user.getAthleteId().getPhysicalData().getRegisters());
+		
+		return registers;
+	}
+
+
 
 	private Double gamePointCalculation(DietScale actualScale) {
 
