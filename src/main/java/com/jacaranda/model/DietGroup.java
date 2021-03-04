@@ -22,13 +22,15 @@ public class DietGroup implements Serializable {
 	private Long id;
 
 	private String name;
-	
+
 	private List<String> athletes;
-	
+
+	private LocalDate creationDate;
+
 	private LocalDate expireDate;
 
 	private DietChallengeType challengeType;
-	
+
 	private Boolean enabled;
 
 	/**
@@ -77,6 +79,20 @@ public class DietGroup implements Serializable {
 	}
 
 	/**
+	 * @return the creationDate
+	 */
+	public LocalDate getCreationDate() {
+		return creationDate;
+	}
+
+	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(LocalDate creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	/**
 	 * @return the expireDate
 	 */
 	public LocalDate getExpireDate() {
@@ -93,7 +109,7 @@ public class DietGroup implements Serializable {
 	/**
 	 * @return the challengeType
 	 */
-	@Column(name="challenge_type")
+	@Column(name = "challenge_type")
 	@Enumerated(EnumType.STRING)
 	public DietChallengeType getChallengeType() {
 		return challengeType;
@@ -119,7 +135,5 @@ public class DietGroup implements Serializable {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-	
-	
 
 }
