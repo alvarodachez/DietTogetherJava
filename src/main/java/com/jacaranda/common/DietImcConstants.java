@@ -16,17 +16,17 @@ public class DietImcConstants {
 
 	public static final Double OBESITY_FOUR = 50.0;
 
-	public static final Integer NORMOPESO_POINTS = 7;
+	public static final Double NORMOPESO_POINTS = 7.0;
 
-	public static final Integer SOBREPESO1_POINTS = 6;
+	public static final Double SOBREPESO1_POINTS = 6.0;
 
-	public static final Integer SOBREPESO2_POINTS = 5;
+	public static final Double SOBREPESO2_POINTS = 5.0;
 
-	public static final Integer OBESIDAD1_POINTS = 4;
+	public static final Double OBESIDAD1_POINTS = 4.0;
 
-	public static final Integer OBESIDAD2_POINTS = 3;
+	public static final Double OBESIDAD2_POINTS = 3.0;
 
-	public static final Integer OBESIDAD3_POINTS = 2;
+	public static final Double OBESIDAD3_POINTS = 2.0;
 
-	public static final Integer OBESIDAD4_POINTS = 1;
+	public static final Double OBESIDAD4_POINTS = 1.0;
 }

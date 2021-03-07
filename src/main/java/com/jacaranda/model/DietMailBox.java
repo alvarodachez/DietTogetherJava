@@ -20,6 +20,8 @@ public class DietMailBox implements Serializable{
 	private Long id;
 
 	private List<DietFriendRequest> friendRequests;
+	
+	private List<DietGroupRequest> groupRequests;
 
 	/**
 	 * @return the id
@@ -52,6 +54,22 @@ public class DietMailBox implements Serializable{
 	 */
 	public void setFriendRequests(List<DietFriendRequest> friendRequests) {
 		this.friendRequests = friendRequests;
+	}
+	
+	/**
+	 * @return the friendRequests
+	 */
+	@OneToMany
+	@JoinColumn(name = "group_id")
+	public List<DietGroupRequest> getGroupRequests() {
+		return groupRequests;
+	}
+
+	/**
+	 * @param friendRequests the friendRequests to set
+	 */
+	public void setGroupRequests(List<DietGroupRequest> groupRequests) {
+		this.groupRequests = groupRequests;
 	}
 
 }

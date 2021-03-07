@@ -21,4 +21,6 @@ public interface DietAthleteServiceI {
 	public List<String> getAthleteFriends(String username);
 	
 	public List<DietFriendRequest> getFriendsRequests(String username);
+	
+	public List<String> getAthletesByInitials(String initials);
 }

@@ -143,7 +143,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		DietUser requestedUser = userRepo.findByUsername(requestedUsername).get();
 		DietFriendRequest friendRequest = new DietFriendRequest();
 
-		if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getAthleteId()))) {
+		if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getUsername()))) {
 
 			friendRequest.setRequestDate(LocalDate.now());
 			friendRequest.setRequestStatus(DietRequestStatus.PENDING);
@@ -210,6 +210,20 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 	public List<DietFriendRequest> getFriendsRequests(String username) {
 		
 		return userRepo.findByUsername(username).get().getAthleteId().getMailBox().getFriendRequests();
+	}
+	
+	
+
+	@Override
+	public List<String> getAthletesByInitials(String initials) {
+		List<DietUser> users = userRepo.findByInitials(initials);
+		
+		List<String> usernames = new ArrayList<String>();
+		
+		for(DietUser user : users) {
+			usernames.add(user.getUsername());
+		}
+		return usernames;
 	}
 
 	/**

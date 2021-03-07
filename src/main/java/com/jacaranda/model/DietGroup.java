@@ -1,18 +1,17 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
 @Entity
 public class DietGroup implements Serializable {
@@ -23,12 +22,16 @@ public class DietGroup implements Serializable {
 	private Long id;
 
 	private String name;
-	
-	private List<DietAthlete> athletes;
-	
-	private LocalDateTime expireDate;
+
+	private List<String> athletes;
+
+	private LocalDate creationDate;
+
+	private LocalDate expireDate;
 
 	private DietChallengeType challengeType;
+
+	private Boolean enabled;
 
 	/**
 	 * @return the id
@@ -63,37 +66,50 @@ public class DietGroup implements Serializable {
 	/**
 	 * @return the athletes
 	 */
-	@OneToMany
-	@JoinColumn(name = "athletes_id")
-	public List<DietAthlete> getAthletes() {
+	@ElementCollection
+	public List<String> getAthletes() {
 		return athletes;
 	}
 
 	/**
 	 * @param athletes the athletes to set
 	 */
-	public void setAthletes(List<DietAthlete> athletes) {
+	public void setAthletes(List<String> athletes) {
 		this.athletes = athletes;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public LocalDate getCreationDate() {
+		return creationDate;
+	}
+
+	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(LocalDate creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	/**
 	 * @return the expireDate
 	 */
-	public LocalDateTime getExpireDate() {
+	public LocalDate getExpireDate() {
 		return expireDate;
 	}
 
 	/**
 	 * @param expireDate the expireDate to set
 	 */
-	public void setExpireDate(LocalDateTime expireDate) {
+	public void setExpireDate(LocalDate expireDate) {
 		this.expireDate = expireDate;
 	}
 
 	/**
 	 * @return the challengeType
 	 */
-	@Column(name="challenge_type")
+	@Column(name = "challenge_type")
 	@Enumerated(EnumType.STRING)
 	public DietChallengeType getChallengeType() {
 		return challengeType;
@@ -104,6 +120,20 @@ public class DietGroup implements Serializable {
 	 */
 	public void setChallengeType(DietChallengeType challengeType) {
 		this.challengeType = challengeType;
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }
