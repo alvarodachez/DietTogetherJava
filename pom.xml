@@ -12,6 +12,7 @@
 	<groupId>com.jacaranda.diettogether</groupId>
 	<artifactId>dietthogether</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>Diet Toegether</name>
 	<description>Proyecto para mejorar la salud en grupo</description>
 	<properties>
