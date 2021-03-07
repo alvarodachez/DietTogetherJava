@@ -45,6 +45,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		// Se setean los datos obtenidos del front
 		registerToCreate.setWeight(register.getWeight());
 		registerToCreate.setWeightDate(LocalDate.now());
+		registerToCreate.setNextDateRegister(LocalDate.now().plusWeeks(1L));
 
 		// Comprobacion para ver si existia ya un registro anterior
 		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
