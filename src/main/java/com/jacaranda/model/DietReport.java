@@ -1,7 +1,15 @@
 package com.jacaranda.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class DietReport implements Serializable {
@@ -14,6 +22,8 @@ public class DietReport implements Serializable {
     private DietReportCategory reportCategory;
 
     private String description;
+    
+    private LocalDate createReportDate;
 
 
     @Id
@@ -43,4 +53,20 @@ public class DietReport implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	/**
+	 * @return the createReportDate
+	 */
+	public LocalDate getCreateReportDate() {
+		return createReportDate;
+	}
+
+	/**
+	 * @param createReportDate the createReportDate to set
+	 */
+	public void setCreateReportDate(LocalDate createReportDate) {
+		this.createReportDate = createReportDate;
+	}
+    
+    
 }
