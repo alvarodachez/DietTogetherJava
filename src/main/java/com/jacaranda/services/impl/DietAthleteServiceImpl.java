@@ -4,21 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jacaranda.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jacaranda.common.DietImcConstants;
-import com.jacaranda.model.DietAthlete;
-import com.jacaranda.model.DietFriendRequest;
-import com.jacaranda.model.DietGroup;
-import com.jacaranda.model.DietImc;
-import com.jacaranda.model.DietMailBox;
-import com.jacaranda.model.DietPhysicalData;
-import com.jacaranda.model.DietPrivateActivity;
-import com.jacaranda.model.DietRegister;
-import com.jacaranda.model.DietRequestStatus;
-import com.jacaranda.model.DietScale;
-import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.model.dto.DietAthleteDTO;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietFriendRequestRepository;
@@ -66,6 +56,10 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 
 		/** Obtenemos usuario por nombre de usuario */
 		DietUser user = userRepo.findByUsername(username).get();
+
+		/** Inicializamos array de reportes del usuario */
+		List<DietReport> reports = new ArrayList<>();
+		user.setReports(reports);
 
 		/** Creamos el atleta con el que trabajaremos */
 		DietAthlete athlete = new DietAthlete();

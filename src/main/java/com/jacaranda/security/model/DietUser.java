@@ -3,21 +3,13 @@ package com.jacaranda.security.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
+import com.jacaranda.model.DietReport;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -65,6 +57,8 @@ public class DietUser implements UserDetails, Serializable {
 	private Integer authenticationAttempts;
 
 	private LocalDateTime passwordPolicyExpDate;
+
+	private List<DietReport> reports;
 
 	private static final long serialVersionUID = 2046866248113544418L;
 
@@ -203,4 +197,14 @@ public class DietUser implements UserDetails, Serializable {
 		this.enabled = enabled;
 	}
 
+	@OneToMany
+	@JoinColumn(name = "report_id")
+	@ElementCollection
+	public List<DietReport> getReports() {
+		return reports;
+	}
+
+	public void setReports(List<DietReport> reports) {
+		this.reports = reports;
+	}
 }
