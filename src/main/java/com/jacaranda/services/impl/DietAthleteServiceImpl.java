@@ -57,10 +57,6 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		/** Obtenemos usuario por nombre de usuario */
 		DietUser user = userRepo.findByUsername(username).get();
 
-		/** Inicializamos array de reportes del usuario */
-		List<DietReport> reports = new ArrayList<>();
-		user.setReports(reports);
-
 		/** Creamos el atleta con el que trabajaremos */
 		DietAthlete athlete = new DietAthlete();
 
@@ -87,6 +83,10 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 
 		List<DietGroup> groups = new ArrayList<DietGroup>();
 		athlete.setGroups(groups);
+
+		/** Inicializamos array de reportes del usuario */
+		List<DietReport> reports = new ArrayList<>();
+		user.getAthleteId().setReports(reports);
 
 		List<DietPrivateActivity> privateActivities = new ArrayList<DietPrivateActivity>();
 		athlete.setPrivateActivities(privateActivities);

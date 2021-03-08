@@ -26,7 +26,7 @@ public class DietReportServiceImpl implements DietReportServiceI {
         /** Obtenemos usuario por nombre de usuario */
         DietUser user = userRepo.findByUsername(username).get();
 
-        return user.getReports();
+        return user.getAthleteId().getReports();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DietReportServiceImpl implements DietReportServiceI {
         reportToCreate.setDescription(report.getDescription());
         reportRepo.save(reportToCreate);
 
-        user.getReports().add(reportToCreate);
+        user.getAthleteId().getReports().add(reportToCreate);
         userRepo.save(user);
 
         return reportToCreate;
