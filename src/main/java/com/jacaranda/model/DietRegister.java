@@ -1,14 +1,12 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 @Entity
 public class DietRegister implements Serializable {
@@ -20,9 +18,9 @@ public class DietRegister implements Serializable {
 
 	private Double weight;
 
-	private LocalDateTime weightDate;
+	private LocalDate weightDate;
 
-	private DietImc imc;
+	private LocalDate nextDateRegister;
 
 	private Double weightDifference;
 
@@ -59,31 +57,29 @@ public class DietRegister implements Serializable {
 	/**
 	 * @return the weightDate
 	 */
-	public LocalDateTime getWeightDate() {
+	public LocalDate getWeightDate() {
 		return weightDate;
 	}
 
 	/**
 	 * @param weightDate the weightDate to set
 	 */
-	public void setWeightDate(LocalDateTime weightDate) {
+	public void setWeightDate(LocalDate weightDate) {
 		this.weightDate = weightDate;
 	}
 
 	/**
-	 * @return the imc
+	 * @return the nextDateRegister
 	 */
-	@OneToOne
-	@JoinColumn(name = "imc_id")
-	public DietImc getImc() {
-		return imc;
+	public LocalDate getNextDateRegister() {
+		return nextDateRegister;
 	}
 
 	/**
-	 * @param imc the imc to set
+	 * @param nextDateRegister the nextDateRegister to set
 	 */
-	public void setImc(DietImc imc) {
-		this.imc = imc;
+	public void setNextDateRegister(LocalDate nextDateRegister) {
+		this.nextDateRegister = nextDateRegister;
 	}
 
 	/**

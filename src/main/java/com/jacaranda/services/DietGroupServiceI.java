@@ -1,7 +1,10 @@
 package com.jacaranda.services;
 
+import java.util.List;
+
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietGroupRequest;
+import com.jacaranda.model.dto.DietProgressBarDto;
 
 public interface DietGroupServiceI {
 
@@ -12,4 +15,8 @@ public interface DietGroupServiceI {
 	public DietGroupRequest acceptGroupRequest(Long id);
 
 	public DietGroupRequest rejectGroupRequest(Long id);
+	
+	public List<DietGroupRequest> getGroupRequests(String username);
+	
+	public DietProgressBarDto getProgressBar(String username);
 }
