@@ -61,4 +61,32 @@ public class DietReportServiceImpl implements DietReportServiceI {
 
 		return reportToCreate;
 	}
+
+	@Override
+	public DietReport assignReport(String username, Long id) {
+		DietUser user = userRepo.findByUsername(username).get();
+		DietReport report = reportRepo.findById(id).get();
+		
+		report.setAdminToResolve(username);
+		report.setReportStatus(DietReportStatus.ASSIGNED);
+		
+		reportRepo.save(report);
+		
+		user.getAthleteId().getReportsAssigned().add(report);
+		
+		athleteRepo.save(user.getAthleteId());
+		userRepo.save(user);
+		return report;
+	}
+
+	@Override
+	public List<DietReport> getAssignedReports(String username) {
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		return user.getAthleteId().getReportsAssigned();
+	}
+	
+	
+	
+	
 }

@@ -33,5 +33,15 @@ public class DietReportingController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reportService.createReport(username, report));
     }
+    
+    @PostMapping("/assign-report/{username}&&{id}")
+    public ResponseEntity<?> assignReport(@PathVariable("username") String username, @PathVariable("id") String id){
+    	return ResponseEntity.status(HttpStatus.CREATED).body(reportService.assignReport(username, Long.valueOf(id)));
+    }
+    
+    @GetMapping("/get-assigned-reports/{username}")
+    public ResponseEntity<?>getAssignedReports(@PathVariable("username") String username){
+    	return ResponseEntity.status(HttpStatus.OK).body(reportService.getAssignedReports(username));
+    }
 
 }
