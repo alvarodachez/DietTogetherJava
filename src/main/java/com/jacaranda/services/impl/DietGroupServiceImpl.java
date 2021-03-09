@@ -1,5 +1,7 @@
 package com.jacaranda.services.impl;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jacaranda.model.DietFriendRequest;
+import com.jacaranda.common.DietExceptionCode;
+import com.jacaranda.exceptions.DietGroupException;
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietGroupRequest;
 import com.jacaranda.model.DietRequestStatus;
@@ -20,8 +23,6 @@ import com.jacaranda.security.model.DietRole;
 import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.repository.DietUserRepository;
 import com.jacaranda.services.DietGroupServiceI;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service("groupService")
 public class DietGroupServiceImpl implements DietGroupServiceI {
@@ -42,36 +43,58 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 	private DietMailBoxRepository mailBoxRepo;
 
 	@Override
-	public DietGroup createGroup(String username, DietGroup group) {
+	public DietGroup createGroup(String username, DietGroup group) throws DietGroupException{
 
 		DietUser user = userRepo.findByUsername(username).get();
 
-		user.getRoles().add(DietRole.GROUP_MANAGER);
-
-		DietGroup groupToCreate = new DietGroup();
-
-		groupToCreate.setName(group.getName());
-		groupToCreate.setExpireDate(group.getExpireDate());
-		groupToCreate.setChallengeType(group.getChallengeType());
-		groupToCreate.setEnabled(Boolean.TRUE);
-		groupToCreate.setCreationDate(LocalDate.now());
-
-		List<String> athletes = new ArrayList<String>();
-		athletes.add(user.getUsername());
-		groupToCreate.setAthletes(athletes);
-
-		for (String requested : group.getAthletes()) {
-			this.sendGroupRequest(username, requested);
-		}
-
-		groupRepo.save(groupToCreate);
+		
 
 		if (user.getAthleteId().getActualGroup() != null
 				&& !(user.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE)) {
+			user.getRoles().add(DietRole.GROUP_MANAGER);
+
+			DietGroup groupToCreate = new DietGroup();
+
+			groupToCreate.setName(group.getName());
+			groupToCreate.setExpireDate(group.getExpireDate());
+			groupToCreate.setChallengeType(group.getChallengeType());
+			groupToCreate.setEnabled(Boolean.TRUE);
+			groupToCreate.setCreationDate(LocalDate.now());
+
+			List<String> athletes = new ArrayList<String>();
+			athletes.add(user.getUsername());
+			groupToCreate.setAthletes(athletes);
+
+			for (String requested : group.getAthletes()) {
+				this.sendGroupRequest(username, requested);
+			}
+
+			groupRepo.save(groupToCreate);
 			user.getAthleteId().getGroups().add(user.getAthleteId().getActualGroup());
 			user.getAthleteId().setActualGroup(groupToCreate);
 		} else if (user.getAthleteId().getActualGroup() == null) {
+			user.getRoles().add(DietRole.GROUP_MANAGER);
+
+			DietGroup groupToCreate = new DietGroup();
+
+			groupToCreate.setName(group.getName());
+			groupToCreate.setExpireDate(group.getExpireDate());
+			groupToCreate.setChallengeType(group.getChallengeType());
+			groupToCreate.setEnabled(Boolean.TRUE);
+			groupToCreate.setCreationDate(LocalDate.now());
+
+			List<String> athletes = new ArrayList<String>();
+			athletes.add(user.getUsername());
+			groupToCreate.setAthletes(athletes);
+
+			for (String requested : group.getAthletes()) {
+				this.sendGroupRequest(username, requested);
+			}
+
+			groupRepo.save(groupToCreate);
 			user.getAthleteId().setActualGroup(groupToCreate);
+		}else {
+			throw new DietGroupException(DietExceptionCode.ALREDY_IN_GROUP);
 		}
 
 		athleteRepo.save(user.getAthleteId());
@@ -114,7 +137,7 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 	}
 
 	@Override
-	public DietGroupRequest acceptGroupRequest(Long id) {
+	public DietGroupRequest acceptGroupRequest(Long id) throws DietGroupException{
 
 		DietGroupRequest request = groupRequestRepo.findById(id).get();
 		DietUser claimantUser = userRepo.findByUsername(request.getClaimantAthlete()).get();
@@ -126,6 +149,8 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 				&& requestedUser.getAthleteId().getActualGroup().getEnabled() == Boolean.TRUE) {
 			request.setRequestStatus(DietRequestStatus.REJECTED);
 			groupRequestRepo.save(request);
+			
+			throw new DietGroupException(DietExceptionCode.ALREDY_IN_GROUP);
 
 		} else {
 			if (request.getRequestStatus() == DietRequestStatus.PENDING) {

@@ -4,11 +4,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jacaranda.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jacaranda.common.DietExceptionCode;
 import com.jacaranda.common.DietImcConstants;
+import com.jacaranda.exceptions.DietRequestException;
+import com.jacaranda.model.DietAthlete;
+import com.jacaranda.model.DietFriendRequest;
+import com.jacaranda.model.DietGroup;
+import com.jacaranda.model.DietImc;
+import com.jacaranda.model.DietMailBox;
+import com.jacaranda.model.DietPhysicalData;
+import com.jacaranda.model.DietPrivateActivity;
+import com.jacaranda.model.DietRegister;
+import com.jacaranda.model.DietReport;
+import com.jacaranda.model.DietRequestStatus;
+import com.jacaranda.model.DietScale;
+import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.model.dto.DietAthleteDTO;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietFriendRequestRepository;
@@ -131,7 +144,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 	}
 
 	@Override
-	public DietFriendRequest sendFriendRequest(String claimantUsername, String requestedUsername) {
+	public DietFriendRequest sendFriendRequest(String claimantUsername, String requestedUsername) throws DietRequestException{
 
 		DietUser claimantUser = userRepo.findByUsername(claimantUsername).get();
 		DietUser requestedUser = userRepo.findByUsername(requestedUsername).get();
@@ -160,9 +173,15 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 					athleteRepo.save(requestedUser.getAthleteId());
 
 					userRepo.save(requestedUser);
+				}else {
+					throw new DietRequestException(DietExceptionCode.ALREDY_REQUEST);
 				}
 
+			}else {
+				throw new DietRequestException(DietExceptionCode.ALREDY_FRIEND);
 			}
+		}else {
+			throw new DietRequestException(DietExceptionCode.SELF_FRIEND_REQUEST);
 		}
 		
 		

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jacaranda.exceptions.DietRegisterException;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.services.DietRegisterServiceI;
 
@@ -25,10 +26,14 @@ public class DietRegisterController {
 	private DietRegisterServiceI registerService;
 
 	@PostMapping("/create-register/{username}")
-	public ResponseEntity<DietRegister> createRegister(@PathVariable("username") String username,
+	public ResponseEntity<?> createRegister(@PathVariable("username") String username,
 			@RequestBody DietRegister register) {
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(registerService.createRegister(username, register));
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(registerService.createRegister(username, register));
+		}catch(DietRegisterException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
 
 	}
 
