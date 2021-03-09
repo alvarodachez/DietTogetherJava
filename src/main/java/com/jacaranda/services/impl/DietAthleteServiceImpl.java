@@ -100,6 +100,10 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		/** Inicializamos array de reportes del usuario */
 		List<DietReport> reports = new ArrayList<>();
 		athlete.setReports(reports);
+		
+		/** Inicializamos array de reportes del usuario */
+		List<DietReport> reportsToResolve = new ArrayList<>();
+		athlete.setReportsAssigned(reportsToResolve);
 
 		List<DietPrivateActivity> privateActivities = new ArrayList<DietPrivateActivity>();
 		athlete.setPrivateActivities(privateActivities);
