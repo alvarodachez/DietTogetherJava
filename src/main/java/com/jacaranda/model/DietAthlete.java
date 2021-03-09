@@ -278,7 +278,7 @@ public class DietAthlete implements Serializable {
     }
 
     @OneToMany
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "athlete_id")
     public List<DietReport> getReports() {
         return reports;
     }
