@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jacaranda.common.DietExceptionCode;
 import com.jacaranda.common.DietImcConstants;
+import com.jacaranda.exceptions.DietRegisterException;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.model.DietScale;
 import com.jacaranda.model.DietScaleImc;
@@ -37,7 +39,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 	 * En este metodo creamos el registro, y se actualizan los datos del atleta convenientes
 	 */
 	@Override
-	public DietRegister createRegister(String username, DietRegister register) {
+	public DietRegister createRegister(String username, DietRegister register) throws DietRegisterException {
 		DietUser user = userRepo.findByUsername(username).get();
 
 		DietRegister registerToCreate = new DietRegister();
@@ -132,6 +134,8 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 				// Se guarda el usuario en base de datos
 				userRepo.save(user);
 
+			}else {
+				throw new DietRegisterException(DietExceptionCode.ONE_REGISTER_PER_WEEK);
 			}
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();

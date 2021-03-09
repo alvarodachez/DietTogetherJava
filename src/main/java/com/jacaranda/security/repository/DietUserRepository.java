@@ -17,4 +17,6 @@ public interface DietUserRepository extends JpaRepository<DietUser, Long> {
 	
 	@Query(value="SELECT * FROM diet_user WHERE username LIKE ?1%", nativeQuery = true)
 	public List<DietUser> findByInitials(@Param("initials")String initials);
+	
+	public boolean existsByUsername(String username);
 }
