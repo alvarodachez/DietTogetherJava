@@ -47,6 +47,8 @@ public class DietAthlete implements Serializable {
     private DietMailBox mailBox;
 
     private List<DietReport> reports;
+    
+    private List<DietReport> reportsAssigned;
 
     /**
      * @return the id
@@ -286,4 +288,22 @@ public class DietAthlete implements Serializable {
     public void setReports(List<DietReport> reports) {
         this.reports = reports;
     }
+
+	/**
+	 * @return the reportsAssigned
+	 */
+    @OneToMany
+    @JoinColumn(name = "admin_id")
+	public List<DietReport> getReportsAssigned() {
+		return reportsAssigned;
+	}
+
+	/**
+	 * @param reportsAssigned the reportsAssigned to set
+	 */
+	public void setReportsAssigned(List<DietReport> reportsAssigned) {
+		this.reportsAssigned = reportsAssigned;
+	}
+    
+    
 }
