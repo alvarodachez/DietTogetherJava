@@ -1,9 +1,6 @@
 package com.jacaranda.restcontroller;
 
-import com.jacaranda.model.DietAthlete;
 import com.jacaranda.model.DietReport;
-import com.jacaranda.model.dto.DietAthleteDTO;
-import com.jacaranda.services.impl.DietAthleteServiceImpl;
 import com.jacaranda.services.impl.DietReportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
