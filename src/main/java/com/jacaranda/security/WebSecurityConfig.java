@@ -61,6 +61,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/group/get-progress-bar/*").hasRole(DietRole.USER.name())
 				.antMatchers(HttpMethod.POST, "/register/create-register/*").hasRole(DietRole.USER.name())
 				.antMatchers(HttpMethod.GET, "/register/get-registers/*").hasRole(DietRole.USER.name())
+				.antMatchers(HttpMethod.GET, "/report/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.POST, "/report/assign-report/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.GET, "/report/get-assigned-reports/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.POST, "/report/set-admin-annotation/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.POST, "/report/set-resolved-status/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.POST, "/report/set-pending-status/*").hasRole(DietRole.ADMIN.name())
 				.and().addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 				.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

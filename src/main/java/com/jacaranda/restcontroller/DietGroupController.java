@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jacaranda.exceptions.DietGroupException;
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietGroupRequest;
 import com.jacaranda.model.dto.DietProgressBarDto;
@@ -27,9 +28,15 @@ public class DietGroupController {
 	DietGroupServiceI groupService;
 
 	@PostMapping("/create-group/{username}")
-	public ResponseEntity<DietGroup> createGroup(@PathVariable String username, @RequestBody DietGroup group) {
+	public ResponseEntity<?> createGroup(@PathVariable String username, @RequestBody DietGroup group) {
+		
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(username, group));
+		}catch(DietGroupException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(username, group));
+		
 	}
 
 	@PostMapping("/send-group-request/{claimant}&&{requested}")
@@ -41,9 +48,13 @@ public class DietGroupController {
 	}
 
 	@PostMapping("/accept-group-request/{id}")
-	public ResponseEntity<DietGroupRequest> acceptGroupRequest(@PathVariable("id") String id) {
+	public ResponseEntity<?> acceptGroupRequest(@PathVariable("id") String id) {
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(groupService.acceptGroupRequest(Long.valueOf(id)));
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(groupService.acceptGroupRequest(Long.valueOf(id)));
+		}catch(DietGroupException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
 	}
 
 	@PostMapping("/reject-group-request/{id}")
@@ -61,5 +72,10 @@ public class DietGroupController {
 	@GetMapping("/get-progress-bar/{username}")
 	public ResponseEntity<DietProgressBarDto> getProgressBar(@PathVariable("username") String username) {
 		return ResponseEntity.status(HttpStatus.OK).body(groupService.getProgressBar(username));
+	}
+	
+	@PostMapping("/get-out-group/{username}")
+	public ResponseEntity<?>getOutGroup(@PathVariable("username") String username){
+		return ResponseEntity.status(HttpStatus.OK).body(groupService.getOutGroup(username));
 	}
 }
