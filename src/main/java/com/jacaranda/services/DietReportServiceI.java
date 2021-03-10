@@ -20,6 +20,8 @@ public interface DietReportServiceI {
     
     public DietReport setResolvedStatus(String username, Long id);
     
+    public DietReport setPendingStatus(String username, Long id);
+    
     public DietReport getReport(Long id);
 
 }

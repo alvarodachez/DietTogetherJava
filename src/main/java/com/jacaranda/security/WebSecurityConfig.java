@@ -66,6 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/report/get-assigned-reports/*").hasRole(DietRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, "/report/set-admin-annotation/*").hasRole(DietRole.ADMIN.name())
 				.antMatchers(HttpMethod.POST, "/report/set-resolved-status/*").hasRole(DietRole.ADMIN.name())
+				.antMatchers(HttpMethod.POST, "/report/set-pending-status/*").hasRole(DietRole.ADMIN.name())
 				.and().addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 				.addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

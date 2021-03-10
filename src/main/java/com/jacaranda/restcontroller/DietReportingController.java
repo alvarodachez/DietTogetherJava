@@ -54,6 +54,11 @@ public class DietReportingController {
     	return ResponseEntity.status(HttpStatus.CREATED).body(reportService.setResolvedStatus(username, Long.valueOf(id)));
     }
     
+    @PostMapping("/set-pending-status/{username)&&{id}")
+    public ResponseEntity<?> setPendingStatus(@PathVariable("username") String username, @PathVariable("id") String id){
+    	return ResponseEntity.status(HttpStatus.CREATED).body(reportService.setPendingStatus(username, Long.valueOf(id)));
+    }
+    
     @GetMapping("/get-report/{id}")
     public ResponseEntity<?> getReport(@PathVariable("id")String id){
     	return ResponseEntity.status(HttpStatus.OK).body(reportService.getReport(Long.valueOf(id)));
