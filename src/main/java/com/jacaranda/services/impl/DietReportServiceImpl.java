@@ -85,6 +85,49 @@ public class DietReportServiceImpl implements DietReportServiceI {
 		
 		return user.getAthleteId().getReportsAssigned();
 	}
+
+	@Override
+	public DietReport setAdminAnnotation(String username, Long id, String annotation) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		DietReport report = reportRepo.findById(id).get();
+		
+		report.setAdminAnnotations(annotation);
+		
+		reportRepo.save(report);
+		
+		athleteRepo.save(user.getAthleteId());
+		
+		userRepo.save(user);
+		
+		return report;
+	}
+
+	@Override
+	public DietReport setResolvedStatus(String username, Long id) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		DietReport report = reportRepo.findById(id).get();
+		
+		report.setReportStatus(DietReportStatus.RESOLVED);
+		
+		reportRepo.save(report);
+		athleteRepo.save(user.getAthleteId());
+		userRepo.save(user);
+		
+		return report;
+	}
+
+	@Override
+	public DietReport getReport(Long id) {
+		
+		return reportRepo.findById(id).get();
+	}
+	
+	
+	
+	
+	
 	
 	
 	

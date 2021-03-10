@@ -73,4 +73,9 @@ public class DietGroupController {
 	public ResponseEntity<DietProgressBarDto> getProgressBar(@PathVariable("username") String username) {
 		return ResponseEntity.status(HttpStatus.OK).body(groupService.getProgressBar(username));
 	}
+	
+	@PostMapping("/get-out-group/{username}")
+	public ResponseEntity<?>getOutGroup(@PathVariable("username") String username){
+		return ResponseEntity.status(HttpStatus.OK).body(groupService.getOutGroup(username));
+	}
 }
