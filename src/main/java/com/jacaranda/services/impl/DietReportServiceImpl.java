@@ -124,7 +124,15 @@ public class DietReportServiceImpl implements DietReportServiceI {
 		DietUser user = userRepo.findByUsername(username).get();
 		DietReport report = reportRepo.findById(id).get();
 		
-		user.getAthleteId().getReportsAssigned().remove(user.getAthleteId().getReportsAssigned().indexOf(report));
+		int position = 0;
+		
+		for(DietReport reportToDelete:user.getAthleteId().getReportsAssigned()) {
+			if(reportToDelete.getId() == id) {
+				position = user.getAthleteId().getReportsAssigned().indexOf(reportToDelete);
+			}
+		}
+		
+		user.getAthleteId().getReportsAssigned().remove(position);
 		
 		report.setAdminToResolve("No asignado");
 		report.setReportStatus(DietReportStatus.PENDING);
