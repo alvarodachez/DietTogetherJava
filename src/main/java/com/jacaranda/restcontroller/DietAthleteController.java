@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jacaranda.exceptions.DietRequestException;
 import com.jacaranda.model.DietAthlete;
 import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.dto.DietAthleteDTO;
@@ -40,9 +41,13 @@ public class DietAthleteController {
 	}
 	
 	@PostMapping("/send-friend-request/{claimant}&&{requested}")
-	public ResponseEntity<DietFriendRequest> sendFriendRequest(@PathVariable("claimant") String claimantUsername, @PathVariable("requested") String requestedUsername){
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(athleteService.sendFriendRequest(claimantUsername, requestedUsername));
+	public ResponseEntity<?> sendFriendRequest(@PathVariable("claimant") String claimantUsername, @PathVariable("requested") String requestedUsername){
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(athleteService.sendFriendRequest(claimantUsername, requestedUsername));
+
+		}catch(DietRequestException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
 	}
 	
 	@PostMapping("/accept-friend-request/{id}")

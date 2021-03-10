@@ -8,7 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.jacaranda.security.model.DietUser;
+import com.jacaranda.common.DietExceptionCode;
+import com.jacaranda.exceptions.DietUserException;
 import com.jacaranda.security.model.dto.DietUserDTO;
 import com.jacaranda.security.model.dto.DietUserDTOConverter;
 import com.jacaranda.security.repository.DietUserRepository;
@@ -34,9 +35,14 @@ public class DietUserServiceImpl implements DietUserServiceI, UserDetailsService
 				.orElseThrow(()-> new AuthenticationException("Id/username not found"));
 	}	
 	
-	public DietUserDTO createNewUser(DietUserDTO userDTO) {
+	public DietUserDTO createNewUser(DietUserDTO userDTO) throws DietUserException{
+		DietUserDTO dto = new DietUserDTO();
+		if(repository.existsByUsername(userDTO.getUsername())) {
+			throw new DietUserException(DietExceptionCode.ALREDY_USER_EXISTS);
+		}else {
+			 dto = converter.fromUserToUserDTO(repository.save(converter.fromUserDTOToUser(userDTO))); 
+		}
 		
-		DietUserDTO dto = converter.fromUserToUserDTO(repository.save(converter.fromUserDTOToUser(userDTO))); 
 		
 		return dto;
 	}
