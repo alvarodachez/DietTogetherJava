@@ -43,5 +43,20 @@ public class DietReportingController {
     public ResponseEntity<?>getAssignedReports(@PathVariable("username") String username){
     	return ResponseEntity.status(HttpStatus.OK).body(reportService.getAssignedReports(username));
     }
+    
+    @PostMapping("/set-admin-annotation/{username}&&{id}")
+    public ResponseEntity<?> setAdminAnnotation(@PathVariable("username") String username, @PathVariable("id") String id, @RequestBody String annotation){
+    	return ResponseEntity.status(HttpStatus.CREATED).body(reportService.setAdminAnnotation(username,Long.valueOf(id), annotation));
+    }
+    
+    @PostMapping("/set-resolved-status/{username)&&{id}")
+    public ResponseEntity<?> setResolvedStatus(@PathVariable("username") String username, @PathVariable("id") String id){
+    	return ResponseEntity.status(HttpStatus.CREATED).body(reportService.setResolvedStatus(username, Long.valueOf(id)));
+    }
+    
+    @GetMapping("/get-report/{id}")
+    public ResponseEntity<?> getReport(@PathVariable("id")String id){
+    	return ResponseEntity.status(HttpStatus.OK).body(reportService.getReport(Long.valueOf(id)));
+    }
 
 }

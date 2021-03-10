@@ -15,5 +15,11 @@ public interface DietReportServiceI {
     public DietReport assignReport(String username, Long id);
     
     public List<DietReport> getAssignedReports(String username);
+    
+    public DietReport setAdminAnnotation(String username, Long id, String annotation);
+    
+    public DietReport setResolvedStatus(String username, Long id);
+    
+    public DietReport getReport(Long id);
 
 }

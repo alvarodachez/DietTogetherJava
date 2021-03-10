@@ -233,4 +233,52 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		return progressBarInfo;
 	}
 
+	@Override
+	public List<DietGroup> getOutGroup(String username) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		if(user.getAthleteId().getActualGroup() != null) {
+			
+			DietGroup group = user.getAthleteId().getActualGroup();
+			
+			user.getAthleteId().getGroups().add(user.getAthleteId().getActualGroup());
+			user.getAthleteId().setTotalPoints(user.getAthleteId().getTotalPoints() + user.getAthleteId().getGamePoints());
+			user.getAthleteId().setGamePoints(0.0);
+			group.getAthletes().remove(username);
+			
+			if(user.getRoles().contains(DietRole.GROUP_MANAGER)) {
+			
+				List<String> usersInGroup = new ArrayList<>();
+				usersInGroup.addAll(group.getAthletes());
+				
+				if(usersInGroup.size() > 1) {
+					DietUser userToUpgrade = userRepo.findByUsername(usersInGroup.get(0)).get();
+					
+					userToUpgrade.getRoles().add(DietRole.GROUP_MANAGER);
+					
+					athleteRepo.save(userToUpgrade.getAthleteId());
+					userRepo.save(userToUpgrade);
+					
+				}
+				
+				user.getRoles().remove(DietRole.GROUP_MANAGER);
+				
+			}
+			
+			
+			user.getAthleteId().setActualGroup(null);
+			groupRepo.save(group);
+		}
+		
+		
+		
+		athleteRepo.save(user.getAthleteId());
+		userRepo.save(user);
+		
+		return user.getAthleteId().getGroups();
+	}
+	
+	
+
 }
