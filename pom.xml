@@ -12,10 +12,11 @@
 	<groupId>com.jacaranda.diettogether</groupId>
 	<artifactId>dietthogether</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>Diet Toegether</name>
 	<description>Proyecto para mejorar la salud en grupo</description>
 	<properties>
-		<java.version>15</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -63,6 +64,11 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.10.7</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
