@@ -25,7 +25,7 @@ import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.model.dto.DietUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebFilter
+//@WebFilter
 @CrossOrigin(origins = "*")
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
