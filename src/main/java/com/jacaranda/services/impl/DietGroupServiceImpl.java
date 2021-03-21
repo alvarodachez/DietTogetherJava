@@ -226,7 +226,7 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 
 		completedDays = DAYS.between(group.getCreationDate(), LocalDate.now());
 
-		percentage = (completedDays / totalDays) * 100.0;
+		percentage = (Double.valueOf(completedDays) / Double.valueOf(totalDays)) * 100.0;
 
 		progressBarInfo.setTotalPercentage(percentage);
 

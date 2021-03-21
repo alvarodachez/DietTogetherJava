@@ -34,9 +34,10 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 	@Autowired
 	DietPhysicalDataRepository physicalDataRepo;
-	
+
 	/**
-	 * En este metodo creamos el registro, y se actualizan los datos del atleta convenientes
+	 * En este metodo creamos el registro, y se actualizan los datos del atleta
+	 * convenientes
 	 */
 	@Override
 	public DietRegister createRegister(String username, DietRegister register) throws DietRegisterException {
@@ -52,8 +53,11 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		// Comprobacion para ver si existia ya un registro anterior
 		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
 
-			// Al ser el primer registro se setea la diferencia de peso con el peso que puso el usuario al registrarse
-			registerToCreate.setWeightDifference(Math.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight())*100.0)/100.0);
+			// Al ser el primer registro se setea la diferencia de peso con el peso que puso
+			// el usuario al registrarse
+			registerToCreate.setWeightDifference(Math
+					.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight()) * 100.0)
+					/ 100.0);
 
 			// Guardamos registro en la base de datos
 			registerRepo.save(registerToCreate);
@@ -89,14 +93,16 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 		} else {
 			// Se calcula una fecha una semana despues del ultimo registro
-			LocalDate dateLimit = user.getAthleteId().getPhysicalData().getLastRegister().getWeightDate().plusWeeks(1L).minusDays(1L);
+			LocalDate dateLimit = user.getAthleteId().getPhysicalData().getLastRegister().getWeightDate().plusWeeks(1L)
+					.minusDays(1L);
 
 			// Se hacen las operaciones si la fecha del registro es posterior a dateLimit
 			if (registerToCreate.getWeightDate().isAfter(dateLimit)) {
-				
-				// Se setea la diferencia de peso contando el ultimo registro 
-				registerToCreate.setWeightDifference(user.getAthleteId().getPhysicalData().getLastRegister().getWeight()
-						- registerToCreate.getWeight());
+
+				// Se setea la diferencia de peso contando el ultimo registro
+				registerToCreate.setWeightDifference(
+						Math.round((user.getAthleteId().getPhysicalData().getLastRegister().getWeight()
+								- registerToCreate.getWeight()) * 100.0) / 100.0);
 
 				// Se guarda el registro en base de datos
 				registerRepo.save(registerToCreate);
@@ -107,7 +113,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 				// Se sustituye el ultimo registro que existia por el nuevo
 				user.getAthleteId().getPhysicalData().setLastRegister(registerToCreate);
-				
+
 				// Cambiamos el peso del atleta al nuevo registro
 				user.getAthleteId().getPhysicalData().setWeight(registerToCreate.getWeight());
 
@@ -121,7 +127,8 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 				// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
 				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000) / 100)
+						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+								/ 100)
 								* this.gamePointCalculation(
 										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
 
@@ -134,27 +141,23 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 				// Se guarda el usuario en base de datos
 				userRepo.save(user);
 
-			}else {
+			} else {
 				throw new DietRegisterException(DietExceptionCode.ONE_REGISTER_PER_WEEK);
 			}
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();
 	}
-	
-	
 
 	@Override
 	public List<DietRegister> getRegistersByUsername(String username) {
 		DietUser user = userRepo.findByUsername(username).get();
-		
+
 		List<DietRegister> registers = new ArrayList<DietRegister>();
 		registers.add(user.getAthleteId().getPhysicalData().getLastRegister());
 		registers.addAll(user.getAthleteId().getPhysicalData().getRegisters());
-		
+
 		return registers;
 	}
-
-
 
 	private Double gamePointCalculation(DietScale actualScale) {
 
