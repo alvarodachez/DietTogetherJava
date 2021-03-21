@@ -89,7 +89,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 		} else {
 			// Se calcula una fecha una semana despues del ultimo registro
-			LocalDate dateLimit = user.getAthleteId().getPhysicalData().getLastRegister().getWeightDate().plusWeeks(1L);
+			LocalDate dateLimit = user.getAthleteId().getPhysicalData().getLastRegister().getWeightDate().plusWeeks(1L).minusDays(1L);
 
 			// Se hacen las operaciones si la fecha del registro es posterior a dateLimit
 			if (registerToCreate.getWeightDate().isAfter(dateLimit)) {
