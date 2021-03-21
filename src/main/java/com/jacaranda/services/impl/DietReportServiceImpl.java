@@ -117,6 +117,38 @@ public class DietReportServiceImpl implements DietReportServiceI {
 		
 		return report;
 	}
+	
+	@Override
+	public DietReport setPendingStatus(String username, Long id) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		DietReport report = reportRepo.findById(id).get();
+		
+		int position = 0;
+		
+		for(DietReport reportToDelete:user.getAthleteId().getReportsAssigned()) {
+			if(reportToDelete.getId() == id) {
+				position = user.getAthleteId().getReportsAssigned().indexOf(reportToDelete);
+			}
+		}
+		
+		user.getAthleteId().getReportsAssigned().remove(position);
+		
+		report.setAdminToResolve("No asignado");
+		report.setReportStatus(DietReportStatus.PENDING);
+		
+		reportRepo.save(report);
+		
+		
+		
+		
+		athleteRepo.save(user.getAthleteId());
+		userRepo.save(user);
+		
+		return report;
+	}
+	
+	
 
 	@Override
 	public DietReport getReport(Long id) {
