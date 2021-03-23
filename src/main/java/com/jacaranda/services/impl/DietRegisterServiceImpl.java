@@ -77,10 +77,21 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 					registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
 
 			// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
-			user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-					+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000) / 100)
-							* this.gamePointCalculation(
-									user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+			if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
+				
+				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+								/ 100)
+								* this.gamePointInverseCalculation(
+										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+			} else {
+				
+				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+								/ 100)
+								* this.gamePointCalculation(
+										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+			}
 
 			// Se guardan los datos fisicos en base de datos
 			physicalDataRepo.save(user.getAthleteId().getPhysicalData());
@@ -126,11 +137,22 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 						registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
 
 				// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
-				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
-								/ 100)
-								* this.gamePointCalculation(
-										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+
+				if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
+
+					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+									/ 100)
+									* this.gamePointInverseCalculation(
+											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+				} else {
+
+					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+									/ 100)
+									* this.gamePointCalculation(
+											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+				}
 
 				// Se guardan los datos fisicos del atleta
 				physicalDataRepo.save(user.getAthleteId().getPhysicalData());
@@ -157,6 +179,29 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		registers.addAll(user.getAthleteId().getPhysicalData().getRegisters());
 
 		return registers;
+	}
+
+	private Double gamePointInverseCalculation(DietScale actualScale) {
+
+		Double res = 0.0;
+		if (actualScale == DietScale.NORMALWEIGHT) {
+			res = DietImcConstants.OBESIDAD4_POINTS;
+		} else if (actualScale == DietScale.OVERWEIGHT_ONE) {
+			res = DietImcConstants.OBESIDAD3_POINTS;
+		} else if (actualScale == DietScale.OVERWEIGHT_TWO) {
+			res = DietImcConstants.OBESIDAD2_POINTS;
+		} else if (actualScale == DietScale.OBESITY_ONE) {
+			res = DietImcConstants.OBESIDAD1_POINTS;
+		} else if (actualScale == DietScale.OBESITY_TWO) {
+			res = DietImcConstants.SOBREPESO2_POINTS;
+		} else if (actualScale == DietScale.OBESITY_THREE) {
+			res = DietImcConstants.SOBREPESO1_POINTS;
+		} else {
+			res = DietImcConstants.NORMOPESO_POINTS;
+
+		}
+
+		return res;
 	}
 
 	private Double gamePointCalculation(DietScale actualScale) {
