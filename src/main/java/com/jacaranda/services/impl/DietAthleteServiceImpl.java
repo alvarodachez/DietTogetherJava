@@ -85,7 +85,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		/** Asignamos datos al atleta */
 		athlete.setName(athleteDto.getName());
 		athlete.setSurname(athleteDto.getSurname());
-		athlete.setBirthDay(LocalDate.now());
+		athlete.setBirthDay(athleteDto.getBirthDay());
 		athlete.setGamePoints(0.0);
 		athlete.setTotalPoints(0.0);
 		athlete.setTotalWeightDifference(0.0);
