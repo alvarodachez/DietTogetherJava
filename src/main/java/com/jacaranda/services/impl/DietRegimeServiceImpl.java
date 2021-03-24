@@ -116,6 +116,14 @@ public class DietRegimeServiceImpl implements DietRegimeServiceI {
 		
 		return mealRepo.findById(meal).get();
 	}
+	
+	
+
+	@Override
+	public List<DietDayRegime> getDayRegime(String username) {
+		
+		return userRepo.findByUsername(username).get().getAthleteId().getRegime().getDays();
+	}
 
 	private List<DietMealRegime> createMealRegimeStructure(){
 		List<DietMealRegime> out = new ArrayList<DietMealRegime>();

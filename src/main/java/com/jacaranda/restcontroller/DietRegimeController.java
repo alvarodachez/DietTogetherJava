@@ -42,5 +42,10 @@ public class DietRegimeController {
 	public ResponseEntity<?> addDishToDay(@PathVariable("username") String username,@PathVariable("meal") String meal, @PathVariable("dish") String dish){
 		return ResponseEntity.status(HttpStatus.CREATED).body(regimeService.addDishToDay(username,Long.valueOf(meal),Long.valueOf(dish)));
 	}
+	
+	@GetMapping("/get-day-regime/{username}")
+	public ResponseEntity<?> getDayRegime(@PathVariable String username){
+		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getDayRegime(username));
+	}
 
 }

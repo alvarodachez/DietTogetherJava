@@ -15,4 +15,6 @@ public interface DietRegimeServiceI {
 	public List<DietDayRegime> createRegimeStructure(String username);
 	
 	public DietMealRegime addDishToDay(String username, Long meal,Long dish);
+	
+	public List<DietDayRegime> getDayRegime(String username);
 }
