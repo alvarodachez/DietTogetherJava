@@ -17,4 +17,6 @@ public interface DietRegimeServiceI {
 	public DietMealRegime addDishToDay(String username, Long meal,Long dish);
 	
 	public List<DietDayRegime> getDayRegime(String username);
+	
+	public List<String> getMealCategories();
 }
