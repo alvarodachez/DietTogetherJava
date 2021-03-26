@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jacaranda.model.DietCategory;
 import com.jacaranda.model.DietDay;
 import com.jacaranda.model.DietDayRegime;
 import com.jacaranda.model.DietDish;
@@ -123,6 +124,26 @@ public class DietRegimeServiceImpl implements DietRegimeServiceI {
 	public List<DietDayRegime> getDayRegime(String username) {
 		
 		return userRepo.findByUsername(username).get().getAthleteId().getRegime().getDays();
+	}
+	
+	
+
+	@Override
+	public List<String> getMealCategories() {
+
+		List<String> categories = new ArrayList<>();
+		
+		categories.add(DietCategory.DAYRY.toString());
+		categories.add(DietCategory.MEAT.toString());
+		categories.add(DietCategory.FISH.toString());
+		categories.add(DietCategory.EGG.toString());
+		categories.add(DietCategory.VEGETABLE.toString());
+		categories.add(DietCategory.NUT.toString());
+		categories.add(DietCategory.POTATO.toString());
+		categories.add(DietCategory.FRUIT.toString());
+		categories.add(DietCategory.CEREAL.toString());
+		
+		return categories;
 	}
 
 	private List<DietMealRegime> createMealRegimeStructure(){

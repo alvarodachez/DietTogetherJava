@@ -47,5 +47,10 @@ public class DietRegimeController {
 	public ResponseEntity<?> getDayRegime(@PathVariable String username){
 		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getDayRegime(username));
 	}
+	
+	@GetMapping("/get-meal-catetgories")
+	public ResponseEntity<?>getMealCategories(){
+		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getMealCategories());
+	}
 
 }
