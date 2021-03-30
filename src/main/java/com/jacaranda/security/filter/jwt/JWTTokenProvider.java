@@ -22,6 +22,7 @@ public class JWTTokenProvider {
         return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
 				.setSubject(user.getId().toString())
+				.claim("expirationTime", EXPIRATION_TIME)
 				.setId(user.getId().toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.claim("roles", user.getRoles())
