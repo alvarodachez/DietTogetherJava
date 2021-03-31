@@ -1,5 +1,6 @@
 package com.jacaranda.services.impl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,6 +155,29 @@ public class DietRegimeServiceImpl implements DietRegimeServiceI {
 		
 		
 		return dishRepo.findByInitials(initials, user.getAthleteId().getId());
+	}
+	
+	
+
+	@Override
+	public DietDayRegime getRegimeByDayOfWeek(String username) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		LocalDate actualDate = LocalDate.now();
+		
+		String dayOfWeek = actualDate.getDayOfWeek().toString();
+		
+		DietDayRegime regimeDay = new DietDayRegime();
+		
+		for(DietDayRegime aux : user.getAthleteId().getRegime().getDays()) {
+			if(aux.getDay().toString().toUpperCase().compareTo(dayOfWeek.toUpperCase()) == 0) {
+				regimeDay = aux;
+			}
+		}
+		
+		
+		return regimeDay;
 	}
 
 	private List<DietMealRegime> createMealRegimeStructure(){
