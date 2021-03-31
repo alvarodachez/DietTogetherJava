@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
 public class DietGroup implements Serializable {
@@ -32,6 +34,8 @@ public class DietGroup implements Serializable {
 	private DietChallengeType challengeType;
 
 	private Boolean enabled;
+	
+	private List<DietRegister> registersToVerify;
 
 	/**
 	 * @return the id
@@ -135,5 +139,23 @@ public class DietGroup implements Serializable {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
+
+	/**
+	 * @return the registersToVerify
+	 */
+	@OneToMany
+    @JoinColumn(name = "register_id")
+	public List<DietRegister> getRegistersToVerify() {
+		return registersToVerify;
+	}
+
+	/**
+	 * @param registersToVerify the registersToVerify to set
+	 */
+	public void setRegistersToVerify(List<DietRegister> registersToVerify) {
+		this.registersToVerify = registersToVerify;
+	}
+	
+	
 
 }

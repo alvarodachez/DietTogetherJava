@@ -10,12 +10,17 @@ import org.springframework.stereotype.Service;
 import com.jacaranda.common.DietExceptionCode;
 import com.jacaranda.common.DietImcConstants;
 import com.jacaranda.exceptions.DietRegisterException;
+import com.jacaranda.model.DietDish;
 import com.jacaranda.model.DietRegister;
+import com.jacaranda.model.DietRegisterStatus;
 import com.jacaranda.model.DietScale;
 import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.repository.DietAthleteRepository;
+import com.jacaranda.repository.DietDishRepository;
+import com.jacaranda.repository.DietGroupRepository;
 import com.jacaranda.repository.DietPhysicalDataRepository;
 import com.jacaranda.repository.DietRegisterRepository;
+import com.jacaranda.security.model.DietRole;
 import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.repository.DietUserRepository;
 import com.jacaranda.services.DietRegisterServiceI;
@@ -35,6 +40,12 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 	@Autowired
 	DietPhysicalDataRepository physicalDataRepo;
 
+	@Autowired
+	DietGroupRepository groupRepo;
+	
+	@Autowired
+	DietDishRepository dishRepo;
+
 	/**
 	 * En este metodo creamos el registro, y se actualizan los datos del atleta
 	 * convenientes
@@ -49,6 +60,8 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		registerToCreate.setWeight(register.getWeight());
 		registerToCreate.setWeightDate(LocalDate.now());
 		registerToCreate.setNextDateRegister(LocalDate.now().plusWeeks(1L));
+		registerToCreate.setRegisterStatus(DietRegisterStatus.PENDING);
+		registerToCreate.setAthlete(username);
 
 		// Comprobacion para ver si existia ya un registro anterior
 		if (user.getAthleteId().getPhysicalData().getLastRegister() == null) {
@@ -77,21 +90,21 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 					registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
 
 			// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
-			if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
-				
-				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
-								/ 100)
-								* this.gamePointInverseCalculation(
-										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
-			} else {
-				
-				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
-								/ 100)
-								* this.gamePointCalculation(
-										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
-			}
+//			if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
+//
+//				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+//						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+//								/ 100)
+//								* this.gamePointInverseCalculation(
+//										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+//			} else {
+//
+//				user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+//						+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+//								/ 100)
+//								* this.gamePointCalculation(
+//										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+//			}
 
 			// Se guardan los datos fisicos en base de datos
 			physicalDataRepo.save(user.getAthleteId().getPhysicalData());
@@ -136,23 +149,27 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 				user.getAthleteId().getPhysicalData().getImc().setActualScale(this.scaleCalculation(
 						registerToCreate.getWeight(), user.getAthleteId().getPhysicalData().getImc().getScales()));
 
+				user.getAthleteId().getActualGroup().getRegistersToVerify().add(registerToCreate);
+
+				groupRepo.save(user.getAthleteId().getActualGroup());
+
 				// Se calcula el puntaje del atleta segun su baremo y la diferencia de peso
 
-				if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
-
-					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
-									/ 100)
-									* this.gamePointInverseCalculation(
-											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
-				} else {
-
-					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
-							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
-									/ 100)
-									* this.gamePointCalculation(
-											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
-				}
+//				if (user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() < 0) {
+//
+//					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+//							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+//									/ 100)
+//									* this.gamePointInverseCalculation(
+//											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+//				} else {
+//
+//					user.getAthleteId().setGamePoints(user.getAthleteId().getGamePoints()
+//							+ (((user.getAthleteId().getPhysicalData().getLastRegister().getWeightDifference() * 1000)
+//									/ 100)
+//									* this.gamePointCalculation(
+//											user.getAthleteId().getPhysicalData().getImc().getActualScale())));
+//				}
 
 				// Se guardan los datos fisicos del atleta
 				physicalDataRepo.save(user.getAthleteId().getPhysicalData());
@@ -168,6 +185,97 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 			}
 		}
 		return user.getAthleteId().getPhysicalData().getLastRegister();
+	}
+
+	@Override
+	public DietRegister verifyRegister(String username, Long id) {
+
+		DietUser manager = userRepo.findByUsername(username).get();
+
+		DietRegister register = registerRepo.findById(id).get();
+
+		DietUser groupMember = userRepo.findByUsername(register.getAthlete()).get();
+
+		if (manager.getRoles().contains(DietRole.GROUP_MANAGER) && (groupMember.getAthleteId().getPhysicalData()
+				.getRegisters().contains(register)
+				|| groupMember.getAthleteId().getPhysicalData().getLastRegister().getId() == register.getId())) {
+			
+			groupMember.getAthleteId().getActualGroup().getRegistersToVerify().remove(register);
+			
+			
+			register.setRegisterStatus(DietRegisterStatus.VERIFIED);
+
+			if (register.getWeightDifference() < 0) {
+
+				groupMember.getAthleteId()
+						.setGamePoints(groupMember.getAthleteId().getGamePoints() + (((register.getWeightDifference() * 1000) / 100)
+								* this.gamePointInverseCalculation(
+										groupMember.getAthleteId().getPhysicalData().getImc().getActualScale())));
+			} else {
+
+				groupMember.getAthleteId()
+						.setGamePoints(groupMember.getAthleteId().getGamePoints() + (((register.getWeightDifference() * 1000) / 100)
+								* this.gamePointCalculation(
+										groupMember.getAthleteId().getPhysicalData().getImc().getActualScale())));
+			}
+			
+			groupRepo.save(groupMember.getAthleteId().getActualGroup());
+			registerRepo.save(register);
+			athleteRepo.save(groupMember.getAthleteId());
+			userRepo.save(groupMember);
+
+		}
+
+		return registerRepo.findById(id).get();
+	}
+	
+	
+	
+
+	@Override
+	public DietRegister declineRegister(String username, Long id) {
+		
+		DietUser manager = userRepo.findByUsername(username).get();
+
+		DietRegister register = registerRepo.findById(id).get();
+
+		DietUser groupMember = userRepo.findByUsername(register.getAthlete()).get();
+		
+		if (manager.getRoles().contains(DietRole.GROUP_MANAGER) && (groupMember.getAthleteId().getPhysicalData()
+				.getRegisters().contains(register)
+				|| groupMember.getAthleteId().getPhysicalData().getLastRegister().getId() == register.getId())) {
+			
+			groupMember.getAthleteId().getActualGroup().getRegistersToVerify().remove(register);
+
+			register.setRegisterStatus(DietRegisterStatus.DECLINED);
+			
+			groupRepo.save(groupMember.getAthleteId().getActualGroup());
+			registerRepo.save(register);
+			athleteRepo.save(groupMember.getAthleteId());
+			userRepo.save(groupMember);
+			
+		}
+		
+		return registerRepo.findById(id).get();
+	}
+	
+	
+
+	@Override
+	public List<DietDish> getAthleteDishesByName(String initials, String username) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		
+		return dishRepo.findByInitials(initials, user.getId());
+	}
+
+	@Override
+	public List<DietRegister> getRegistersToVerify(String username) {
+		DietUser manager = userRepo.findByUsername(username).get();
+		
+		
+		return manager.getAthleteId().getActualGroup().getRegistersToVerify();
 	}
 
 	@Override
