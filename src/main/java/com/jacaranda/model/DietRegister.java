@@ -3,7 +3,10 @@ package com.jacaranda.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +26,10 @@ public class DietRegister implements Serializable {
 	private LocalDate nextDateRegister;
 
 	private Double weightDifference;
+	
+	private DietRegisterStatus registerStatus;
+	
+	private String athlete;
 
 	/**
 	 * @return the id
@@ -95,5 +102,41 @@ public class DietRegister implements Serializable {
 	public void setWeightDifference(Double weightDifference) {
 		this.weightDifference = weightDifference;
 	}
+
+
+
+	/**
+	 * @return the registerStatus
+	 */
+	@Column(name = "register_status")
+	@Enumerated(EnumType.STRING)
+	public DietRegisterStatus getRegisterStatus() {
+		return registerStatus;
+	}
+
+	/**
+	 * @param registerStatus the registerStatus to set
+	 */
+	public void setRegisterStatus(DietRegisterStatus registerStatus) {
+		this.registerStatus = registerStatus;
+	}
+
+	/**
+	 * @return the athlete
+	 */
+	public String getAthlete() {
+		return athlete;
+	}
+
+	/**
+	 * @param athlete the athlete to set
+	 */
+	public void setAthlete(String athlete) {
+		this.athlete = athlete;
+	}
+	
+	
+	
+	
 
 }
