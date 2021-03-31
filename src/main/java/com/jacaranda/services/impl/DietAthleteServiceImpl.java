@@ -11,12 +11,16 @@ import com.jacaranda.common.DietExceptionCode;
 import com.jacaranda.common.DietImcConstants;
 import com.jacaranda.exceptions.DietRequestException;
 import com.jacaranda.model.DietAthlete;
+import com.jacaranda.model.DietDayRegime;
+import com.jacaranda.model.DietDish;
 import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietImc;
 import com.jacaranda.model.DietMailBox;
+import com.jacaranda.model.DietMealRegime;
 import com.jacaranda.model.DietPhysicalData;
 import com.jacaranda.model.DietPrivateActivity;
+import com.jacaranda.model.DietRegime;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.model.DietReport;
 import com.jacaranda.model.DietRequestStatus;
@@ -28,6 +32,7 @@ import com.jacaranda.repository.DietFriendRequestRepository;
 import com.jacaranda.repository.DietImcRepository;
 import com.jacaranda.repository.DietMailBoxRepository;
 import com.jacaranda.repository.DietPhysicalDataRepository;
+import com.jacaranda.repository.DietRegimeRepository;
 import com.jacaranda.repository.DietScaleImcRepository;
 import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.repository.DietUserRepository;
@@ -56,6 +61,9 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 
 	@Autowired
 	DietFriendRequestRepository friendRequestRepo;
+
+	@Autowired
+	DietRegimeRepository regimeRepo;
 
 	@Override
 	public DietAthlete getAthlete(String username) {
@@ -100,7 +108,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		/** Inicializamos array de reportes del usuario */
 		List<DietReport> reports = new ArrayList<>();
 		athlete.setReports(reports);
-		
+
 		/** Inicializamos array de reportes del usuario */
 		List<DietReport> reportsToResolve = new ArrayList<>();
 		athlete.setReportsAssigned(reportsToResolve);
@@ -127,7 +135,22 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		List<DietFriendRequest> friendRequests = new ArrayList<DietFriendRequest>();
 		mailBox.setFriendRequests(friendRequests);
 
+		/** Inicializamos la dieta del atleta */
+
+		DietRegime regime = new DietRegime();
+
+		List<DietDish> dishes = new ArrayList<>();
+
+		List<DietDayRegime> days = new ArrayList<>();
+
+		regime.setDishes(dishes);
+
+		regime.setDays(days);
+
 		/** Guardamos entidades y asignamos las correspondientes entre ellas */
+
+		regimeRepo.save(regime);
+
 		mailBoxRepo.save(mailBox);
 
 		imcRepo.save(imc);
@@ -137,6 +160,7 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		physicalData.setImc(imc);
 		physicalDataRepo.save(physicalData);
 
+		athlete.setRegime(regime);
 		athlete.setMailBox(mailBox);
 		athlete.setPhysicalData(physicalData);
 		athleteRepo.save(athlete);
@@ -148,7 +172,8 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 	}
 
 	@Override
-	public DietFriendRequest sendFriendRequest(String claimantUsername, String requestedUsername) throws DietRequestException{
+	public DietFriendRequest sendFriendRequest(String claimantUsername, String requestedUsername)
+			throws DietRequestException {
 
 		DietUser claimantUser = userRepo.findByUsername(claimantUsername).get();
 		DietUser requestedUser = userRepo.findByUsername(requestedUsername).get();
@@ -160,7 +185,8 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 			// Comprobacion de si ya son amigos
 			if (!(claimantUser.getAthleteId().getFriends().contains(requestedUser.getUsername()))) {
 
-				// Comprobacion de si el usuario solicitado no tiene ya peticiones del solicitante
+				// Comprobacion de si el usuario solicitado no tiene ya peticiones del
+				// solicitante
 				if (this.userRequestedHasFriendRequest(requestedUser.getAthleteId().getMailBox().getFriendRequests(),
 						claimantUser.getUsername()) == Boolean.FALSE) {
 					friendRequest.setRequestDate(LocalDate.now());
@@ -177,18 +203,16 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 					athleteRepo.save(requestedUser.getAthleteId());
 
 					userRepo.save(requestedUser);
-				}else {
+				} else {
 					throw new DietRequestException(DietExceptionCode.ALREDY_REQUEST);
 				}
 
-			}else {
+			} else {
 				throw new DietRequestException(DietExceptionCode.ALREDY_FRIEND);
 			}
-		}else {
+		} else {
 			throw new DietRequestException(DietExceptionCode.SELF_FRIEND_REQUEST);
 		}
-		
-		
 
 		return friendRequest;
 	}
