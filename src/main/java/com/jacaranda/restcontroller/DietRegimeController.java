@@ -52,5 +52,10 @@ public class DietRegimeController {
 	public ResponseEntity<?>getMealCategories(){
 		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getMealCategories());
 	}
+	
+	@GetMapping("/get-dishes-initials/{username}&&{initials}")
+	public ResponseEntity<?>getAthleteDishesByInitials(@PathVariable("username") String username, @PathVariable("initials") String initials){
+		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getAthleteDishesByInitials(username, initials));
+	}
 
 }

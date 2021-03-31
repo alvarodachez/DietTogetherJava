@@ -18,5 +18,5 @@ public interface DietRegisterServiceI {
 	
 	public List<DietRegister> getRegistersToVerify(String username);
 	
-	public List<DietDish> getAthleteDishesByName(String initials, String username);
+	
 }

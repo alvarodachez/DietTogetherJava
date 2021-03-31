@@ -42,7 +42,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 	@Autowired
 	DietGroupRepository groupRepo;
-	
+
 	@Autowired
 	DietDishRepository dishRepo;
 
@@ -199,26 +199,25 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 		if (manager.getRoles().contains(DietRole.GROUP_MANAGER) && (groupMember.getAthleteId().getPhysicalData()
 				.getRegisters().contains(register)
 				|| groupMember.getAthleteId().getPhysicalData().getLastRegister().getId() == register.getId())) {
-			
+
 			groupMember.getAthleteId().getActualGroup().getRegistersToVerify().remove(register);
-			
-			
+
 			register.setRegisterStatus(DietRegisterStatus.VERIFIED);
 
 			if (register.getWeightDifference() < 0) {
 
 				groupMember.getAthleteId()
-						.setGamePoints(groupMember.getAthleteId().getGamePoints() + (((register.getWeightDifference() * 1000) / 100)
-								* this.gamePointInverseCalculation(
+						.setGamePoints(groupMember.getAthleteId().getGamePoints()
+								+ (((register.getWeightDifference() * 1000) / 100) * this.gamePointInverseCalculation(
 										groupMember.getAthleteId().getPhysicalData().getImc().getActualScale())));
 			} else {
 
 				groupMember.getAthleteId()
-						.setGamePoints(groupMember.getAthleteId().getGamePoints() + (((register.getWeightDifference() * 1000) / 100)
-								* this.gamePointCalculation(
+						.setGamePoints(groupMember.getAthleteId().getGamePoints()
+								+ (((register.getWeightDifference() * 1000) / 100) * this.gamePointCalculation(
 										groupMember.getAthleteId().getPhysicalData().getImc().getActualScale())));
 			}
-			
+
 			groupRepo.save(groupMember.getAthleteId().getActualGroup());
 			registerRepo.save(register);
 			athleteRepo.save(groupMember.getAthleteId());
@@ -228,53 +227,38 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 
 		return registerRepo.findById(id).get();
 	}
-	
-	
-	
 
 	@Override
 	public DietRegister declineRegister(String username, Long id) {
-		
+
 		DietUser manager = userRepo.findByUsername(username).get();
 
 		DietRegister register = registerRepo.findById(id).get();
 
 		DietUser groupMember = userRepo.findByUsername(register.getAthlete()).get();
-		
+
 		if (manager.getRoles().contains(DietRole.GROUP_MANAGER) && (groupMember.getAthleteId().getPhysicalData()
 				.getRegisters().contains(register)
 				|| groupMember.getAthleteId().getPhysicalData().getLastRegister().getId() == register.getId())) {
-			
+
 			groupMember.getAthleteId().getActualGroup().getRegistersToVerify().remove(register);
 
 			register.setRegisterStatus(DietRegisterStatus.DECLINED);
-			
+
 			groupRepo.save(groupMember.getAthleteId().getActualGroup());
 			registerRepo.save(register);
 			athleteRepo.save(groupMember.getAthleteId());
 			userRepo.save(groupMember);
-			
-		}
-		
-		return registerRepo.findById(id).get();
-	}
-	
-	
 
-	@Override
-	public List<DietDish> getAthleteDishesByName(String initials, String username) {
-		
-		DietUser user = userRepo.findByUsername(username).get();
-		
-		
-		return dishRepo.findByInitials(initials, user.getId());
+		}
+
+		return registerRepo.findById(id).get();
 	}
 
 	@Override
 	public List<DietRegister> getRegistersToVerify(String username) {
 		DietUser manager = userRepo.findByUsername(username).get();
-		
-		
+
 		return manager.getAthleteId().getActualGroup().getRegistersToVerify();
 	}
 
