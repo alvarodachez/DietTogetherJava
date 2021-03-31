@@ -19,4 +19,6 @@ public interface DietRegimeServiceI {
 	public List<DietDayRegime> getDayRegime(String username);
 	
 	public List<String> getMealCategories();
+	
+	public List<DietDish> getAthleteDishesByInitials(String username,String initials);
 }

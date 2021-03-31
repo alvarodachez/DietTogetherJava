@@ -146,6 +146,16 @@ public class DietRegimeServiceImpl implements DietRegimeServiceI {
 		return categories;
 	}
 
+	
+	@Override
+	public List<DietDish> getAthleteDishesByInitials(String username, String initials) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		
+		return dishRepo.findByInitials(initials, user.getAthleteId().getId());
+	}
+
 	private List<DietMealRegime> createMealRegimeStructure(){
 		List<DietMealRegime> out = new ArrayList<DietMealRegime>();
 		
