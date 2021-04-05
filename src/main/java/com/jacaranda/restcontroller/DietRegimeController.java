@@ -57,5 +57,10 @@ public class DietRegimeController {
 	public ResponseEntity<?>getAthleteDishesByInitials(@PathVariable("username") String username, @PathVariable("initials") String initials){
 		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getAthleteDishesByInitials(username, initials));
 	}
+	
+	@GetMapping("/get-day-week-regime/{username}")
+	public ResponseEntity<?>getRegimeDayOfWeek(@PathVariable("username") String username){
+		return ResponseEntity.status(HttpStatus.OK).body(regimeService.getRegimeByDayOfWeek(username));
+	}
 
 }

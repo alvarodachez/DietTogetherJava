@@ -13,6 +13,6 @@ import com.jacaranda.model.DietDish;
 public interface DietDishRepository extends JpaRepository<DietDish, Long>{
 
 
-	@Query(value="SELECT * FROM diet_dish WHERE name LIKE ?1% AND dish_id == ?2", nativeQuery = true)
+	@Query(value="SELECT * FROM diet_dish WHERE name LIKE ?1% AND dish_id = ?2", nativeQuery = true)
 	public List<DietDish> findByInitials(@Param("initials")String initials, Long id);
 }
