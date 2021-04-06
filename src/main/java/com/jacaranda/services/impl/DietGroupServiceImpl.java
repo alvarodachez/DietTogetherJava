@@ -3,10 +3,12 @@ package com.jacaranda.services.impl;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.jacaranda.common.DietExceptionCode;
@@ -279,6 +281,23 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 		return user.getAthleteId().getGroups();
 	}
 	
+	@Scheduled(cron = "*/10 * * * * *", zone="Europe/Madrid")
+	public void holaQueTal() {
+		System.out.println(LocalTime.now().toString());
+		System.out.println("TUS MUERTOS");
+		System.out.println("TUS MUERTOS");
+		System.out.println("TUS MUERTOS");
+		System.out.println("---------------------------------");
+	}
+	
+	@Scheduled(cron = "*/5 * * * * *", zone="Europe/Madrid")
+	public void adiosQueTal() {
+		System.out.println(LocalTime.now().toString());
+		System.out.println("MARICON");
+		System.out.println("MARICON");
+		System.out.println("MARICON");
+		System.out.println("---------------------------------");
+	}
 	
 
 }
