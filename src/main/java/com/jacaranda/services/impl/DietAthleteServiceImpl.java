@@ -27,6 +27,7 @@ import com.jacaranda.model.DietRequestStatus;
 import com.jacaranda.model.DietScale;
 import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.model.dto.DietAthleteDTO;
+import com.jacaranda.model.dto.DietAthleteRankingDto;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietFriendRequestRepository;
 import com.jacaranda.repository.DietImcRepository;
@@ -273,6 +274,23 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 			usernames.add(user.getUsername());
 		}
 		return usernames;
+	}
+	
+	
+
+	@Override
+	public DietAthleteRankingDto getAthleteRanking(String username) {
+		
+		DietUser user = userRepo.findByUsername(username).get();
+		
+		DietAthleteRankingDto athleteRanking = new DietAthleteRankingDto();
+		
+		athleteRanking.setUsername(user.getUsername());
+		athleteRanking.setRoles(user.getRoles());
+		athleteRanking.setName(user.getAthleteId().getName());
+		athleteRanking.setGamePoints(user.getAthleteId().getGamePoints());
+		
+		return athleteRanking;
 	}
 
 	private Boolean userRequestedHasFriendRequest(List<DietFriendRequest> friendRequests, String claimantUser) {

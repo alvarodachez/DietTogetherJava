@@ -252,7 +252,7 @@ public class DietGroupServiceImpl implements DietGroupServiceI {
 				List<String> usersInGroup = new ArrayList<>();
 				usersInGroup.addAll(group.getAthletes());
 				
-				if(usersInGroup.size() > 1) {
+				if(usersInGroup.size() >= 1) {
 					DietUser userToUpgrade = userRepo.findByUsername(usersInGroup.get(0)).get();
 					
 					userToUpgrade.getRoles().add(DietRole.GROUP_MANAGER);
