@@ -259,7 +259,18 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 	public List<DietRegister> getRegistersToVerify(String username) {
 		DietUser manager = userRepo.findByUsername(username).get();
 
-		return manager.getAthleteId().getActualGroup().getRegistersToVerify();
+		// Se comprueba si el usuario tiene el rol GROUP_MANAGER
+		if (manager.getRoles().contains(DietRole.GROUP_MANAGER)) {
+
+			// Si lo tiene, se devuelve la lista de registros por verificar
+			return manager.getAthleteId().getActualGroup().getRegistersToVerify();
+
+		} else {
+
+			// Si NO lo tiene, se devuelve null
+			return null;
+		}
+
 	}
 
 	@Override
