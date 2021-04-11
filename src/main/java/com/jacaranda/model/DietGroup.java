@@ -9,11 +9,13 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class DietGroup implements Serializable {
@@ -36,6 +38,8 @@ public class DietGroup implements Serializable {
 	private Boolean enabled;
 	
 	private List<DietRegister> registersToVerify;
+	
+	private DietBoostDay boostDay;
 
 	/**
 	 * @return the id
@@ -154,6 +158,29 @@ public class DietGroup implements Serializable {
 	 */
 	public void setRegistersToVerify(List<DietRegister> registersToVerify) {
 		this.registersToVerify = registersToVerify;
+	}
+
+	/**
+	 * @return the boostDay
+	 */
+	@OneToOne
+    @JoinColumn(name = "boost_day_id")
+	public DietBoostDay getBoostDay() {
+		return boostDay;
+	}
+
+	/**
+	 * @param boostDay the boostDay to set
+	 */
+	public void setBoostDay(DietBoostDay boostDay) {
+		this.boostDay = boostDay;
+	}
+
+	@Override
+	public String toString() {
+		return "DietGroup [id=" + id + ", name=" + name + ", athletes=" + athletes + ", creationDate=" + creationDate
+				+ ", expireDate=" + expireDate + ", challengeType=" + challengeType + ", enabled=" + enabled
+				+ ", registersToVerify=" + registersToVerify + ", boostDay=" + boostDay + "]";
 	}
 	
 	

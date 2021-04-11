@@ -86,4 +86,10 @@ public class DietDish implements Serializable {
 		this.categories = categories;
 	}
 
+	@Override
+	public String toString() {
+		return "DietDish [id=" + id + ", name=" + name + ", description=" + description + ", categories=" + categories
+				+ "]";
+	}
+
 }
