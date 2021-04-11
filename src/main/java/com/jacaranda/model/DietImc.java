@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -86,6 +87,12 @@ public class DietImc implements Serializable {
 	 */
 	public void setScales(List<DietScaleImc> scales) {
 		this.scales = scales;
+	}
+
+	@Override
+	public String toString() {
+		return "DietImc [id=" + id + ", imcValue=" + imcValue + ", actualScale=" + actualScale + ", scales=" + scales
+				+ "]";
 	}
 
 

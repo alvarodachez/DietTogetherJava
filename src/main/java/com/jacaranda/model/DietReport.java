@@ -133,6 +133,14 @@ public class DietReport implements Serializable {
 	public void setReportStatus(DietReportStatus reportStatus) {
 		this.reportStatus = reportStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "DietReport [id=" + id + ", reportCategory=" + reportCategory + ", description=" + description
+				+ ", createReportDate=" + createReportDate + ", athleteHasReported=" + athleteHasReported
+				+ ", adminAnnotations=" + adminAnnotations + ", adminToResolve=" + adminToResolve + ", reportStatus="
+				+ reportStatus + "]";
+	}
 	
 	
 	

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,7 +61,7 @@ public class DietDayRegime implements Serializable {
 	/**
 	 * @return the meals
 	 */
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "meal_id")
 	public List<DietMealRegime> getMeals() {
 		return meals;
@@ -71,6 +72,11 @@ public class DietDayRegime implements Serializable {
 	 */
 	public void setMeals(List<DietMealRegime> meals) {
 		this.meals = meals;
+	}
+
+	@Override
+	public String toString() {
+		return "DietDayRegime [id=" + id + ", day=" + day + ", meals=" + meals + "]";
 	}
 
 }

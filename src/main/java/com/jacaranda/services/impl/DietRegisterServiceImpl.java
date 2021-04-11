@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.jacaranda.common.DietExceptionCode;
 import com.jacaranda.common.DietImcConstants;
 import com.jacaranda.exceptions.DietRegisterException;
-import com.jacaranda.model.DietDish;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.model.DietRegisterStatus;
 import com.jacaranda.model.DietScale;
@@ -72,6 +71,19 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 					.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight()) * 100.0)
 					/ 100.0);
 
+			// Comprobacion si es BoostAthlete
+			if (user.getAthleteId().getActualGroup().getBoostDay().getBoostAthlete() != null) {
+				if (user.getAthleteId().getActualGroup().getBoostDay().getBoostAthlete().getUsername()
+						.compareTo(user.getUsername()) == 0) {
+
+					if (registerToCreate.getWeightDifference() >= user.getAthleteId().getActualGroup().getBoostDay()
+							.getBoostAthlete().getWeightChallenge()) {
+						registerToCreate.setWeightDifference(registerToCreate.getWeightDifference() + user
+								.getAthleteId().getActualGroup().getBoostDay().getBoostAthlete().getWeightChallenge());
+					}
+				}
+			}
+
 			// Guardamos registro en la base de datos
 			registerRepo.save(registerToCreate);
 
@@ -106,6 +118,7 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 //										user.getAthleteId().getPhysicalData().getImc().getActualScale())));
 //			}
 
+			user.getAthleteId().getActualGroup().getRegistersToVerify().add(registerToCreate);
 			// Se guardan los datos fisicos en base de datos
 			physicalDataRepo.save(user.getAthleteId().getPhysicalData());
 
@@ -127,6 +140,20 @@ public class DietRegisterServiceImpl implements DietRegisterServiceI {
 				registerToCreate.setWeightDifference(
 						Math.round((user.getAthleteId().getPhysicalData().getLastRegister().getWeight()
 								- registerToCreate.getWeight()) * 100.0) / 100.0);
+
+				// Comprobacion si es BoostAthlete
+				if (user.getAthleteId().getActualGroup().getBoostDay().getBoostAthlete() != null) {
+					if (user.getAthleteId().getActualGroup().getBoostDay().getBoostAthlete().getUsername()
+							.compareTo(user.getUsername()) == 0) {
+
+						if (registerToCreate.getWeightDifference() >= user.getAthleteId().getActualGroup().getBoostDay()
+								.getBoostAthlete().getWeightChallenge()) {
+							registerToCreate
+									.setWeightDifference(registerToCreate.getWeightDifference() + user.getAthleteId()
+											.getActualGroup().getBoostDay().getBoostAthlete().getWeightChallenge());
+						}
+					}
+				}
 
 				// Se guarda el registro en base de datos
 				registerRepo.save(registerToCreate);

@@ -103,4 +103,10 @@ public class DietFriendRequest implements Serializable {
 		this.requestedAthlete = requestedAthlete;
 	}
 
+	@Override
+	public String toString() {
+		return "DietFriendRequest [id=" + id + ", requestStatus=" + requestStatus + ", requestDate=" + requestDate
+				+ ", claimantAthlete=" + claimantAthlete + ", requestedAthlete=" + requestedAthlete + "]";
+	}
+
 }
