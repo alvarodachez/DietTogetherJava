@@ -82,4 +82,10 @@ public class DietPrivateActivity implements Serializable {
 		this.weightObjective = weightObjective;
 	}
 
+	@Override
+	public String toString() {
+		return "DietPrivateActivity [id=" + id + ", name=" + name + ", expireDate=" + expireDate + ", weightObjective="
+				+ weightObjective + "]";
+	}
+
 }

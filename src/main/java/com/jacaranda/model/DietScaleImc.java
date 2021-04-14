@@ -66,4 +66,9 @@ public class DietScaleImc implements Serializable {
 		this.weightScale = weightScale;
 	}
 
+	@Override
+	public String toString() {
+		return "DietScaleImc [id=" + id + ", scale=" + scale + ", weightScale=" + weightScale + "]";
+	}
+
 }

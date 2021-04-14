@@ -134,6 +134,13 @@ public class DietRegister implements Serializable {
 	public void setAthlete(String athlete) {
 		this.athlete = athlete;
 	}
+
+	@Override
+	public String toString() {
+		return "DietRegister [id=" + id + ", weight=" + weight + ", weightDate=" + weightDate + ", nextDateRegister="
+				+ nextDateRegister + ", weightDifference=" + weightDifference + ", registerStatus=" + registerStatus
+				+ ", athlete=" + athlete + "]";
+	}
 	
 	
 	

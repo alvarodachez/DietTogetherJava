@@ -72,4 +72,9 @@ public class DietMealRegime implements Serializable {
 		this.dish = dish;
 	}
 
+	@Override
+	public String toString() {
+		return "DietMealRegime [id=" + id + ", meal=" + meal + ", dish=" + dish + "]";
+	}
+
 }
