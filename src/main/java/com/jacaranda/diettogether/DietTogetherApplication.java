@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan(basePackages = { "com.jacaranda.model", "com.jacaranda.security.model" })
 @EnableJpaRepositories(basePackages = { "com.jacaranda.repository", "com.jacaranda.security.repository" })
 @EnableScheduling
-public class DietTogetherApplication {
+public class DietTogetherApplication extends SpringBootServletInitializer 	{
 
 	public static void main(String[] args) {
 		SpringApplication.run(DietTogetherApplication.class, args);
