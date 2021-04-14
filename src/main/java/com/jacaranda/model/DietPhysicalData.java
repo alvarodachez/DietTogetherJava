@@ -94,7 +94,7 @@ public class DietPhysicalData implements Serializable {
 	/**
 	 * @return the registers
 	 */
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "register_id")
 	public List<DietRegister> getRegisters() {
 		return registers;
@@ -127,6 +127,12 @@ public class DietPhysicalData implements Serializable {
 		Double imc = this.weight / (this.height * this.height);
 
 		this.imc.setImcValue(imc);
+	}
+
+	@Override
+	public String toString() {
+		return "DietPhysicalData [id=" + id + ", weight=" + weight + ", height=" + height + ", imc=" + imc
+				+ ", registers=" + registers + ", lastRegister=" + lastRegister + "]";
 	}
 
 }

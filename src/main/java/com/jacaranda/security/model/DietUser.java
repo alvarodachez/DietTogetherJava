@@ -31,7 +31,16 @@ import com.jacaranda.model.DietAthlete;
 @EntityListeners(AuditingEntityListener.class)
 public class DietUser implements UserDetails, Serializable {
 
-    @Id
+    @Override
+	public String toString() {
+		return "DietUser [id=" + id + ", username=" + username + ", password=" + password + ", athleteId=" + athleteId
+				+ ", roles=" + roles + ", createTime=" + createTime + ", updateTime=" + updateTime + ", deleteTime="
+				+ deleteTime + ", lastPasswordChange=" + lastPasswordChange + ", locked=" + locked + ", enabled="
+				+ enabled + ", authenticationAttempts=" + authenticationAttempts + ", passwordPolicyExpDate="
+				+ passwordPolicyExpDate + "]";
+	}
+
+	@Id
     @GeneratedValue
     private Long id;
 

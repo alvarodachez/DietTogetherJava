@@ -100,4 +100,10 @@ public class DietGroupRequest implements Serializable{
 	public void setRequestedAthlete(String requestedAthlete) {
 		this.requestedAthlete = requestedAthlete;
 	}
+
+	@Override
+	public String toString() {
+		return "DietGroupRequest [id=" + id + ", requestStatus=" + requestStatus + ", requestDate=" + requestDate
+				+ ", claimantAthlete=" + claimantAthlete + ", requestedAthlete=" + requestedAthlete + "]";
+	}
 }
