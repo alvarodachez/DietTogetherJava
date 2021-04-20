@@ -41,14 +41,12 @@ public class DietBoostDayServiceImpl implements DietBoostDayServiceI {
 	private DietBoostAthleteRepository boostAthleteRepo;
 
 	@Scheduled(cron = "0 0 1 * * *", zone = "Europe/Madrid")
-	// @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
+	//@Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
 	public void checkBoostDay() {
-
-		System.out.println("HOLA GENTE");
+		
 		// Obtención de grupos activos
 		List<DietGroup> groupsEnabled = groupRepo.findByEnabled();
 
-		System.out.println(groupsEnabled.size());
 		// Fecha actual
 		LocalDate actualDate = LocalDate.now();
 
