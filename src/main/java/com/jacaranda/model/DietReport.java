@@ -1,7 +1,15 @@
 package com.jacaranda.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class DietReport implements Serializable {
@@ -14,6 +22,16 @@ public class DietReport implements Serializable {
     private DietReportCategory reportCategory;
 
     private String description;
+    
+    private LocalDate createReportDate;
+    
+    private String athleteHasReported;
+    
+    private String adminAnnotations;
+    
+    private String adminToResolve;
+    
+    private DietReportStatus reportStatus;
 
 
     @Id
@@ -43,4 +61,90 @@ public class DietReport implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	/**
+	 * @return the createReportDate
+	 */
+	public LocalDate getCreateReportDate() {
+		return createReportDate;
+	}
+
+	/**
+	 * @param createReportDate the createReportDate to set
+	 */
+	public void setCreateReportDate(LocalDate createReportDate) {
+		this.createReportDate = createReportDate;
+	}
+
+	/**
+	 * @return the athleteHasReported
+	 */
+	public String getAthleteHasReported() {
+		return athleteHasReported;
+	}
+
+	/**
+	 * @param athleteHasReported the athleteHasReported to set
+	 */
+	public void setAthleteHasReported(String athleteHasReported) {
+		this.athleteHasReported = athleteHasReported;
+	}
+
+	/**
+	 * @return the adminAnnotations
+	 */
+	public String getAdminAnnotations() {
+		return adminAnnotations;
+	}
+
+	/**
+	 * @param adminAnnotations the adminAnnotations to set
+	 */
+	public void setAdminAnnotations(String adminAnnotations) {
+		this.adminAnnotations = adminAnnotations;
+	}
+
+	/**
+	 * @return the adminToResolve
+	 */
+	public String getAdminToResolve() {
+		return adminToResolve;
+	}
+
+	/**
+	 * @param adminToResolve the adminToResolve to set
+	 */
+	public void setAdminToResolve(String adminToResolve) {
+		this.adminToResolve = adminToResolve;
+	}
+
+	/**
+	 * @return the reportStatus
+	 */
+	@Column(name = "report_status")
+    @Enumerated(EnumType.STRING)
+	public DietReportStatus getReportStatus() {
+		return reportStatus;
+	}
+
+	/**
+	 * @param reportStatus the reportStatus to set
+	 */
+	public void setReportStatus(DietReportStatus reportStatus) {
+		this.reportStatus = reportStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "DietReport [id=" + id + ", reportCategory=" + reportCategory + ", description=" + description
+				+ ", createReportDate=" + createReportDate + ", athleteHasReported=" + athleteHasReported
+				+ ", adminAnnotations=" + adminAnnotations + ", adminToResolve=" + adminToResolve + ", reportStatus="
+				+ reportStatus + "]";
+	}
+	
+	
+	
+	
+    
+    
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jacaranda.exceptions.DietRegisterException;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.services.DietRegisterServiceI;
 
@@ -25,10 +26,14 @@ public class DietRegisterController {
 	private DietRegisterServiceI registerService;
 
 	@PostMapping("/create-register/{username}")
-	public ResponseEntity<DietRegister> createRegister(@PathVariable("username") String username,
+	public ResponseEntity<?> createRegister(@PathVariable("username") String username,
 			@RequestBody DietRegister register) {
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(registerService.createRegister(username, register));
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(registerService.createRegister(username, register));
+		} catch (DietRegisterException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
 
 	}
 
@@ -36,6 +41,26 @@ public class DietRegisterController {
 	public ResponseEntity<List<DietRegister>> getRegistersByUsername(@PathVariable("username") String username) {
 
 		return ResponseEntity.status(HttpStatus.OK).body(registerService.getRegistersByUsername(username));
+	}
+
+	@PostMapping("/verify-register/{username}&&{id}")
+	public ResponseEntity<?> verifyRegister(@PathVariable("username") String username, @PathVariable("id") String id) {
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(registerService.verifyRegister(username, Long.valueOf(id)));
+	}
+
+	@PostMapping("/decline-register/{username}&&{id}")
+	public ResponseEntity<?> declineRegister(@PathVariable("username") String username, @PathVariable("id") String id) {
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(registerService.declineRegister(username, Long.valueOf(id)));
+	}
+
+	@GetMapping("/get-registers-to-verify/{username}")
+	public ResponseEntity<?> getRegistersToVerify(@PathVariable("username") String username) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(registerService.getRegistersToVerify(username));
 	}
 
 }

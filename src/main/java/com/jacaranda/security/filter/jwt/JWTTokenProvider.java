@@ -22,8 +22,10 @@ public class JWTTokenProvider {
         return Jwts.builder()
 				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
 				.setSubject(user.getId().toString())
+				.claim("expirationTime", EXPIRATION_TIME)
 				.setId(user.getId().toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.claim("roles", user.getRoles())
 //				.claim("updateTime", user.getUpdateTime())//Example
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(getKey(), SignatureAlgorithm.HS512)

@@ -1,7 +1,7 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ public class DietDish implements Serializable {
 
 	private String description;
 	
-	private Set<DietCategory> categories;
+	private List<DietCategory> categories;
 
 	/**
 	 * @return the id
@@ -75,15 +75,21 @@ public class DietDish implements Serializable {
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
-	public Set<DietCategory> getCategories() {
+	public List<DietCategory> getCategories() {
 		return categories;
 	}
 
 	/**
 	 * @param categories the categories to set
 	 */
-	public void setCategories(Set<DietCategory> categories) {
+	public void setCategories(List<DietCategory> categories) {
 		this.categories = categories;
+	}
+
+	@Override
+	public String toString() {
+		return "DietDish [id=" + id + ", name=" + name + ", description=" + description + ", categories=" + categories
+				+ "]";
 	}
 
 }

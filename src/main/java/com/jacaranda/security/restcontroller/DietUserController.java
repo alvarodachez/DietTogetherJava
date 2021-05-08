@@ -2,8 +2,6 @@ package com.jacaranda.security.restcontroller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.jacaranda.exceptions.DietUserException;
 import com.jacaranda.security.model.dto.DietUserDTO;
 import com.jacaranda.security.services.impl.DietUserServiceImpl;
 
@@ -26,10 +25,13 @@ public class DietUserController {
 	private DietUserServiceImpl userService;
 
 	@PostMapping("/sign-up")
-	public ResponseEntity<DietUserDTO> signUp(@RequestBody DietUserDTO userDTO) {
+	public ResponseEntity<?> signUp(@RequestBody DietUserDTO userDTO) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(userDTO));
-		}catch(Exception ex) {
+		}catch(DietUserException e){
+			 return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getCode());
+		}
+		catch(Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}

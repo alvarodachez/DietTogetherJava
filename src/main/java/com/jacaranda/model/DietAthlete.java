@@ -2,30 +2,30 @@ package com.jacaranda.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class DietAthlete implements Serializable {
 
-	/** SERIAL ID */
+	/**
+	 * SERIAL ID
+	 */
 	private static final long serialVersionUID = 1L;
 
-	/** Id de la entidad en bbdd */
+	/**
+	 * Id de la entidad en bbdd
+	 */
 	private Long id;
 
 	private String name;
@@ -53,8 +53,12 @@ public class DietAthlete implements Serializable {
 	private DietPrivateActivity actualPrivateActivity;
 
 	private DietRegime regime;
-	
+
 	private DietMailBox mailBox;
+
+	private List<DietReport> reports;
+
+	private List<DietReport> reportsAssigned;
 
 	/**
 	 * @return the id
@@ -119,7 +123,7 @@ public class DietAthlete implements Serializable {
 	 * @return the physicalData
 	 */
 	@OneToOne
-	@JoinColumn(name="physical_data_id")
+	@JoinColumn(name = "physical_data_id")
 	public DietPhysicalData getPhysicalData() {
 		return physicalData;
 	}
@@ -208,7 +212,7 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the actualGroup
 	 */
-	@OneToOne   
+	@OneToOne
 	@JoinColumn(name = "actual_group_id")
 	public DietGroup getActualGroup() {
 		return actualGroup;
@@ -240,7 +244,7 @@ public class DietAthlete implements Serializable {
 	/**
 	 * @return the actualPrivateActivity
 	 */
-	@OneToOne   
+	@OneToOne
 	@JoinColumn(name = "actual_privateActivity_id")
 	public DietPrivateActivity getActualPrivateActivity() {
 		return actualPrivateActivity;
@@ -257,7 +261,7 @@ public class DietAthlete implements Serializable {
 	 * @return the regime
 	 */
 	@OneToOne
-	@JoinColumn(name="regime_id")
+	@JoinColumn(name = "regime_id")
 	public DietRegime getRegime() {
 		return regime;
 	}
@@ -273,7 +277,7 @@ public class DietAthlete implements Serializable {
 	 * @return the mailBox
 	 */
 	@OneToOne
-	@JoinColumn(name="mailBox_id")
+	@JoinColumn(name = "mailBox_id")
 	public DietMailBox getMailBox() {
 		return mailBox;
 	}
@@ -283,6 +287,42 @@ public class DietAthlete implements Serializable {
 	 */
 	public void setMailBox(DietMailBox mailBox) {
 		this.mailBox = mailBox;
+	}
+
+	@OneToMany
+	@JoinColumn(name = "athlete_id")
+	public List<DietReport> getReports() {
+		return reports;
+	}
+
+	public void setReports(List<DietReport> reports) {
+		this.reports = reports;
+	}
+
+	/**
+	 * @return the reportsAssigned
+	 */
+	@OneToMany
+	@JoinColumn(name = "admin_id")
+	public List<DietReport> getReportsAssigned() {
+		return reportsAssigned;
+	}
+
+	/**
+	 * @param reportsAssigned the reportsAssigned to set
+	 */
+	public void setReportsAssigned(List<DietReport> reportsAssigned) {
+		this.reportsAssigned = reportsAssigned;
+	}
+
+	@Override
+	public String toString() {
+		return "DietAthlete [id=" + id + ", name=" + name + ", surname=" + surname + ", birthDay=" + birthDay
+				+ ", physicalData=" + physicalData + ", totalWeightDifference=" + totalWeightDifference
+				+ ", gamePoints=" + gamePoints + ", totalPoints=" + totalPoints + ", friends=" + friends + ", groups="
+				+ groups + ", actualGroup=" + actualGroup + ", privateActivities=" + privateActivities
+				+ ", actualPrivateActivity=" + actualPrivateActivity + ", regime=" + regime + ", mailBox=" + mailBox
+				+ ", reports=" + reports + ", reportsAssigned=" + reportsAssigned + "]";
 	}
 	
 	
