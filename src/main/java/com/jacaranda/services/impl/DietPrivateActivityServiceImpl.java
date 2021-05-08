@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietPrivateActivity;
 import com.jacaranda.model.DietPrivateActivityMode;
 import com.jacaranda.model.DietPrivateRegisterMode;
@@ -60,6 +59,7 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 			privateActivityToCreate.setPrivateActivityMode(privateActivity.getPrivateActivityMode());
 			privateActivityToCreate.setPrivateRegisterMode(privateActivity.getPrivateRegisterMode());
 			privateActivityToCreate.setWeightObjective(privateActivity.getWeightObjective());
+			privateActivityToCreate.setExpireDate(privateActivity.getExpireDate());
 
 			if (privateActivityToCreate.getPrivateRegisterMode() == DietPrivateRegisterMode.PROGRESSIVE) {
 				privateActivityToCreate.setActualProgressiveDate(LocalDate.now().plusWeeks(1L));
