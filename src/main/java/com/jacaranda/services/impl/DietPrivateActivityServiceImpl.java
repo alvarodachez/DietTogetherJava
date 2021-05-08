@@ -1,5 +1,7 @@
 package com.jacaranda.services.impl;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.jacaranda.model.DietGroup;
 import com.jacaranda.model.DietPrivateActivity;
 import com.jacaranda.model.DietPrivateActivityMode;
 import com.jacaranda.model.DietPrivateRegisterMode;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.model.comparator.DietRegisterCreateDateComparator;
+import com.jacaranda.model.dto.DietProgressBarDto;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietPhysicalDataRepository;
 import com.jacaranda.repository.DietPrivateActivityRepository;
@@ -106,6 +110,42 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 	public DietPrivateActivity getPrivateActivity(String username) {
 
 		return userRepo.findByUsername(username).get().getAthleteId().getActualPrivateActivity();
+	}
+	
+	@Override
+	public DietProgressBarDto getProgressBar(String username) {
+
+		DietUser user = userRepo.findByUsername(username).get();
+
+		DietPrivateActivity privateActivity = user.getAthleteId().getActualPrivateActivity();
+
+		DietProgressBarDto progressBarInfo = new DietProgressBarDto();
+
+		// Obtencion de los dias restantes
+
+		long daysLeft = 0;
+
+		daysLeft = DAYS.between(LocalDate.now(), privateActivity.getExpireDate());
+
+		progressBarInfo.setDaysLeft(daysLeft);
+
+		// Obtencion del porcentaje transcurrido
+
+		long totalDays = 0;
+
+		long completedDays = 0;
+
+		Double percentage = 0.0;
+
+		totalDays = DAYS.between(privateActivity.getCreateDate(), privateActivity.getExpireDate());
+
+		completedDays = DAYS.between(privateActivity.getCreateDate(), LocalDate.now());
+
+		percentage = (Double.valueOf(completedDays) / Double.valueOf(totalDays)) * 100.0;
+
+		progressBarInfo.setTotalPercentage(percentage);
+
+		return progressBarInfo;
 	}
 
 	@Scheduled(cron = "0 0 2 * * *", zone = "Europe/Madrid")

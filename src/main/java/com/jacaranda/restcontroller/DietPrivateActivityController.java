@@ -42,4 +42,10 @@ public class DietPrivateActivityController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(privateActivityService.getPrivateActivity(username));
 	}
+	
+	@GetMapping("/get-progress-bar/{username}")
+	public ResponseEntity<?> getProgressBar(@PathVariable String username){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(privateActivityService.getProgressBar(username));
+	}
 }
