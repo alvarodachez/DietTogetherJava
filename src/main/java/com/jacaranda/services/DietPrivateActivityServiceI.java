@@ -2,6 +2,7 @@ package com.jacaranda.services;
 
 import com.jacaranda.model.DietPrivateActivity;
 import com.jacaranda.model.DietRegister;
+import com.jacaranda.model.dto.DietPrivateActivityDto;
 import com.jacaranda.model.dto.DietProgressBarDto;
 
 public interface DietPrivateActivityServiceI {
@@ -10,7 +11,7 @@ public interface DietPrivateActivityServiceI {
 	
 	DietRegister createRegister(String username, DietRegister register);
 	
-	DietPrivateActivity getPrivateActivity(String username);
+	DietPrivateActivityDto getPrivateActivity(String username);
 	
 	DietProgressBarDto getProgressBar(String username);
 }

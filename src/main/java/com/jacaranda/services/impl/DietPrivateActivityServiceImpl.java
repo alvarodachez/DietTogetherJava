@@ -16,6 +16,9 @@ import com.jacaranda.model.DietPrivateActivityMode;
 import com.jacaranda.model.DietPrivateRegisterMode;
 import com.jacaranda.model.DietRegister;
 import com.jacaranda.model.comparator.DietRegisterCreateDateComparator;
+import com.jacaranda.model.dto.DietPrivateActivityClassicDto;
+import com.jacaranda.model.dto.DietPrivateActivityDto;
+import com.jacaranda.model.dto.DietPrivateActivityProgressiveDto;
 import com.jacaranda.model.dto.DietProgressBarDto;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietPhysicalDataRepository;
@@ -25,6 +28,8 @@ import com.jacaranda.security.model.DietUser;
 import com.jacaranda.security.repository.DietUserRepository;
 import com.jacaranda.services.DietPrivateActivityServiceI;
 import com.jacaranda.services.impl.utils.DietRegisterUtils;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Service("privateActivityService")
 public class DietPrivateActivityServiceImpl implements DietPrivateActivityServiceI {
@@ -107,11 +112,79 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 	}
 
 	@Override
-	public DietPrivateActivity getPrivateActivity(String username) {
+	public DietPrivateActivityDto getPrivateActivity(String username) {
 
-		return userRepo.findByUsername(username).get().getAthleteId().getActualPrivateActivity();
+		DietUser user = userRepo.findByUsername(username).get();
+
+		DietPrivateActivity privateActivity = user.getAthleteId().getActualPrivateActivity();
+
+		if (privateActivity.getPrivateRegisterMode() == DietPrivateRegisterMode.CLASSIC) {
+			DietPrivateActivityClassicDto privateActivityDto = new DietPrivateActivityClassicDto();
+
+			privateActivityDto.setAthlete(privateActivity.getAthlete());
+			privateActivityDto.setId(privateActivity.getId());
+			privateActivityDto.setCreateDate(privateActivity.getCreateDate());
+			privateActivityDto.setExpireDate(privateActivity.getExpireDate());
+			privateActivityDto.setEnabled(privateActivity.getEnabled());
+			privateActivityDto.setPrivateActivityMode(privateActivity.getPrivateActivityMode());
+			privateActivityDto.setWeightObjective(privateActivity.getWeightObjective());
+
+			privateActivityDto.setRegisterMode(DietPrivateRegisterMode.CLASSIC);
+
+			List<DietRegister> registers = new ArrayList<>();
+
+			if (user.getAthleteId().getPhysicalData().getRegisters() != null
+					&& !Collections.isEmpty(user.getAthleteId().getPhysicalData().getRegisters())) {
+				LocalDate date = privateActivity.getCreateDate();
+
+				user.getAthleteId().getPhysicalData().getRegisters().stream().forEach((r) -> {
+					if (date.isBefore(r.getWeightDate())) {
+						registers.add(r);
+					}
+				});
+
+			}
+
+			privateActivityDto.setTotalRegisters(registers);
+
+			return privateActivityDto;
+
+		} else {
+			DietPrivateActivityProgressiveDto privateActivityDto = new DietPrivateActivityProgressiveDto();
+
+			privateActivityDto.setAthlete(privateActivity.getAthlete());
+			privateActivityDto.setId(privateActivity.getId());
+			privateActivityDto.setCreateDate(privateActivity.getCreateDate());
+			privateActivityDto.setExpireDate(privateActivity.getExpireDate());
+			privateActivityDto.setEnabled(privateActivity.getEnabled());
+			privateActivityDto.setPrivateActivityMode(privateActivity.getPrivateActivityMode());
+			privateActivityDto.setWeightObjective(privateActivity.getWeightObjective());
+
+			privateActivityDto.setRegisterMode(DietPrivateRegisterMode.PROGRESSIVE);
+
+			List<DietRegister> registers = new ArrayList<>();
+
+			if (user.getAthleteId().getPhysicalData().getRegisters() != null
+					&& !Collections.isEmpty(user.getAthleteId().getPhysicalData().getRegisters())) {
+				LocalDate date = privateActivity.getCreateDate();
+
+				user.getAthleteId().getPhysicalData().getRegisters().stream().forEach((r) -> {
+					if (date.isBefore(r.getWeightDate())) {
+						registers.add(r);
+					}
+				});
+
+			}
+
+			privateActivityDto.setTotalRegisters(registers);
+
+			privateActivityDto.setDaylyRegisters(privateActivity.getRegisters());
+
+			return privateActivityDto;
+		}
+
 	}
-	
+
 	@Override
 	public DietProgressBarDto getProgressBar(String username) {
 
