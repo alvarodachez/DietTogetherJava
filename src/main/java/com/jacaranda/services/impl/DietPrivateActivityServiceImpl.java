@@ -104,7 +104,7 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 			} else if (user.getAthleteId().getActualPrivateActivity()
 					.getPrivateRegisterMode() == DietPrivateRegisterMode.CLASSIC) {
 
-				registerToCreate = this.createClassicRegister(user, username, registerToCreate);
+				registerToCreate = this.createClassicRegister(user, username, register);
 			}
 		}
 
@@ -115,8 +115,8 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 	public DietPrivateActivityDto getPrivateActivity(String username) {
 
 		DietUser user = userRepo.findByUsername(username).get();
-		
-		if(user.getAthleteId().getActualPrivateActivity() == null) {
+
+		if (user.getAthleteId().getActualPrivateActivity() == null) {
 			return null;
 		}
 
@@ -136,6 +136,10 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 			privateActivityDto.setRegisterMode(DietPrivateRegisterMode.CLASSIC);
 
 			List<DietRegister> registers = new ArrayList<>();
+
+			if (user.getAthleteId().getPhysicalData().getLastRegister() != null) {
+				registers.add(user.getAthleteId().getPhysicalData().getLastRegister());
+			}
 
 			if (user.getAthleteId().getPhysicalData().getRegisters() != null
 					&& !Collections.isEmpty(user.getAthleteId().getPhysicalData().getRegisters())) {
@@ -167,6 +171,10 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 			privateActivityDto.setRegisterMode(DietPrivateRegisterMode.PROGRESSIVE);
 
 			List<DietRegister> registers = new ArrayList<>();
+
+			if (user.getAthleteId().getPhysicalData().getLastRegister() != null) {
+				registers.add(user.getAthleteId().getPhysicalData().getLastRegister());
+			}
 
 			if (user.getAthleteId().getPhysicalData().getRegisters() != null
 					&& !Collections.isEmpty(user.getAthleteId().getPhysicalData().getRegisters())) {
@@ -412,10 +420,9 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 					/ 100.0);
 
 			// Guardamos registro en la base de datos
-			registerRepo.save(registerToCreate);
 
 			// Añadimos el registro como ultimo registro al atleta
-			user.getAthleteId().getPhysicalData().setLastRegister(registerToCreate);
+			user.getAthleteId().getPhysicalData().setLastRegister(registerRepo.save(registerToCreate));
 
 			// Cambiamos el peso del atleta al nuevo registro
 			user.getAthleteId().getPhysicalData().setWeight(registerToCreate.getWeight());
@@ -489,14 +496,13 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 								- registerToCreate.getWeight()) * 100.0) / 100.0);
 
 				// Se guarda el registro en base de datos
-				registerRepo.save(registerToCreate);
 
 				// Se añade a la lista de registros el ultimo registro que existia
 				user.getAthleteId().getPhysicalData().getRegisters()
 						.add(user.getAthleteId().getPhysicalData().getLastRegister());
 
 				// Se sustituye el ultimo registro que existia por el nuevo
-				user.getAthleteId().getPhysicalData().setLastRegister(registerToCreate);
+				user.getAthleteId().getPhysicalData().setLastRegister(registerRepo.save(registerToCreate));
 
 				// Cambiamos el peso del atleta al nuevo registro
 				user.getAthleteId().getPhysicalData().setWeight(registerToCreate.getWeight());
