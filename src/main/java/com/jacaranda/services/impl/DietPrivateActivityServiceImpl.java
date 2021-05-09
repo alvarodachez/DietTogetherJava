@@ -233,40 +233,50 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 		return progressBarInfo;
 	}
 
-	@Scheduled(cron = "0 0 2 * * *", zone = "Europe/Madrid")
-	// @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
+//	@Scheduled(cron = "0 0 2 * * *", zone = "Europe/Madrid")
+	 @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
 	public void checkProgressiveRegister() {
 
 		LocalDate localDate = LocalDate.now();// For reference
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String formattedString = localDate.format(formatter);
 
 		List<DietPrivateActivity> privateActivities = privateActivityRepo
-				.findByEnabledProgressiveOnDate(formattedString);
+				.findByEnabledProgressiveOnDate(localDate);
 
 		if (privateActivities != null && !privateActivities.isEmpty()) {
 
 			for (DietPrivateActivity privateActivity : privateActivities) {
-				if (!privateActivity.getRegisters().isEmpty()) {
+				
+				List<DietRegister> privateActivityRegisters = registerRepo.findByPrivateActivity(String.valueOf(privateActivity.getId()));
+				
+				if (!privateActivityRegisters.isEmpty()) {
 
 					List<DietRegister> registers = new ArrayList<>();
-					privateActivity.getRegisters().sort(new DietRegisterCreateDateComparator());
+					privateActivityRegisters.sort(new DietRegisterCreateDateComparator());
 
-					registers.addAll(privateActivity.getRegisters());
-
-					Double averageWeight = registers.stream()
-							.filter(register -> register.getWeightDate()
-									.isAfter(privateActivity.getActualProgressiveDate().minusWeeks(1L))
-									&& register.getWeightDate().isBefore(LocalDate.now()))
-							.mapToDouble(register -> register.getWeight()).average().getAsDouble();
+					registers.addAll(privateActivityRegisters);
 
 					DietRegister registerToCreate = new DietRegister();
+
+					if (registers.size() > 1) {
+						Double averageWeight = registers.stream()
+								.filter(register -> register.getWeightDate()
+										.isAfter(privateActivity.getActualProgressiveDate().minusWeeks(1L))
+										&& register.getWeightDate().isBefore(LocalDate.now()))
+								.mapToDouble(register -> register.getWeight()).average().getAsDouble(); //peta
+						
+						registerToCreate.setWeight(averageWeight);
+					} else {
+						registerToCreate.setWeight(registers.get(0).getWeight());
+					}
+
 
 					registerToCreate.setAthlete(privateActivity.getAthlete());
 					registerToCreate.setNextDateRegister(LocalDate.now().plusWeeks(1L));
 					registerToCreate.setRegisterStatus(null);
 					registerToCreate.setWeightDate(LocalDate.now());
-					registerToCreate.setWeight(averageWeight);
+					
 
 					DietUser user = userRepo.findByUsername(privateActivity.getAthlete()).get();
 
@@ -370,9 +380,9 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 				registerToCreate.setNextDateRegister(LocalDate.now().plusDays(1L));
 				registerToCreate.setWeightDate(LocalDate.now());
 				registerToCreate.setWeight(register.getWeight());
-				registerToCreate.setWeightDifference(Math.round(user.getAthleteId().getActualPrivateActivity()
+				registerToCreate.setWeightDifference(Math.round((user.getAthleteId().getActualPrivateActivity()
 						.getRegisters().get(user.getAthleteId().getActualPrivateActivity().getRegisters().size() - 1)
-						.getWeight() - registerToCreate.getWeight() * 100.0) / 100.0);
+						.getWeight() - registerToCreate.getWeight()) * 100.0) / 100.0);
 
 				user.getAthleteId().getActualPrivateActivity().getRegisters().add(registerRepo.save(registerToCreate));
 				privateActivityRepo.save(user.getAthleteId().getActualPrivateActivity());
@@ -386,8 +396,8 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 			registerToCreate.setWeightDate(LocalDate.now());
 			registerToCreate.setWeight(register.getWeight());
 			registerToCreate.setWeightDifference(
-					Math.round(user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight() * 100.0)
-							/ 100.0);
+					Math.round((user.getAthleteId().getPhysicalData().getWeight() - registerToCreate.getWeight()) * 100.0)
+							/ 100.0);			
 
 			user.getAthleteId().getActualPrivateActivity().getRegisters().add(registerRepo.save(registerToCreate));
 			privateActivityRepo.save(user.getAthleteId().getActualPrivateActivity());
