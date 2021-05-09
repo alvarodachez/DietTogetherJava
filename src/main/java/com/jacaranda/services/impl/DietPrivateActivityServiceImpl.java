@@ -115,6 +115,10 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 	public DietPrivateActivityDto getPrivateActivity(String username) {
 
 		DietUser user = userRepo.findByUsername(username).get();
+		
+		if(user.getAthleteId().getActualPrivateActivity() == null) {
+			return null;
+		}
 
 		DietPrivateActivity privateActivity = user.getAthleteId().getActualPrivateActivity();
 
