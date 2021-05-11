@@ -28,6 +28,7 @@ import com.jacaranda.model.DietScale;
 import com.jacaranda.model.DietScaleImc;
 import com.jacaranda.model.dto.DietAthleteDTO;
 import com.jacaranda.model.dto.DietAthleteRankingDto;
+import com.jacaranda.model.dto.DietProfileAthleteDto;
 import com.jacaranda.repository.DietAthleteRepository;
 import com.jacaranda.repository.DietFriendRequestRepository;
 import com.jacaranda.repository.DietImcRepository;
@@ -275,22 +276,58 @@ public class DietAthleteServiceImpl implements DietAthleteServiceI {
 		}
 		return usernames;
 	}
-	
-	
 
 	@Override
 	public DietAthleteRankingDto getAthleteRanking(String username) {
-		
+
 		DietUser user = userRepo.findByUsername(username).get();
-		
+
 		DietAthleteRankingDto athleteRanking = new DietAthleteRankingDto();
-		
+
 		athleteRanking.setUsername(user.getUsername());
 		athleteRanking.setRoles(user.getRoles());
 		athleteRanking.setName(user.getAthleteId().getName());
 		athleteRanking.setGamePoints(user.getAthleteId().getGamePoints());
-		
+
 		return athleteRanking;
+	}
+
+	@Override
+	public DietProfileAthleteDto updateProfileData(String username, DietProfileAthleteDto profileAthleteDto) {
+
+		DietUser user = userRepo.findByUsername(username).get();
+
+		DietProfileAthleteDto profileAthleteDtoToCreate = new DietProfileAthleteDto();
+
+		if (profileAthleteDto.getName() != null && profileAthleteDto.getName().trim().compareTo("") != 0
+				&& profileAthleteDto.getName().trim().toLowerCase()
+						.compareTo(user.getAthleteId().getName().trim().toLowerCase()) != 0) {
+
+			user.getAthleteId().setName(profileAthleteDto.getName());
+
+			profileAthleteDtoToCreate.setName(profileAthleteDto.getName());
+		}
+
+		if (profileAthleteDto.getSurname() != null && profileAthleteDto.getSurname().trim().compareTo("") != 0
+				&& profileAthleteDto.getSurname().trim().toLowerCase()
+						.compareTo(user.getAthleteId().getSurname().trim().toLowerCase()) != 0) {
+
+			user.getAthleteId().setSurname(profileAthleteDto.getSurname());
+
+			profileAthleteDtoToCreate.setSurname(profileAthleteDto.getSurname());
+		}
+
+		if (profileAthleteDto.getBirthday() != null) {
+			user.getAthleteId().setBirthDay(profileAthleteDto.getBirthday());
+
+			profileAthleteDtoToCreate.setBirthday(profileAthleteDtoToCreate.getBirthday());
+		}
+		
+		athleteRepo.save(user.getAthleteId());
+		userRepo.save(user);
+		
+
+		return profileAthleteDtoToCreate;
 	}
 
 	private Boolean userRequestedHasFriendRequest(List<DietFriendRequest> friendRequests, String claimantUser) {

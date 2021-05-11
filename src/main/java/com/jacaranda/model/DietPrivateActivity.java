@@ -1,14 +1,18 @@
 package com.jacaranda.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class DietPrivateActivity implements Serializable {
@@ -18,11 +22,25 @@ public class DietPrivateActivity implements Serializable {
 
 	private Long id;
 
-	private String name;
-
-	private LocalDateTime expireDate;
+	private LocalDate expireDate;
 
 	private Double weightObjective;
+
+	private String athlete;
+
+	private LocalDate createDate;
+
+	private DietPrivateActivityMode privateActivityMode;
+
+	private DietPrivateRegisterMode privateRegisterMode;
+
+	private Boolean enabled;
+
+	private List<DietRegister> registers;
+
+	private LocalDate actualProgressiveDate;
+
+	private LocalDate nextProgressiveDate;
 
 	/**
 	 * @return the id
@@ -41,30 +59,16 @@ public class DietPrivateActivity implements Serializable {
 	}
 
 	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
 	 * @return the expireDate
 	 */
-	public LocalDateTime getExpireDate() {
+	public LocalDate getExpireDate() {
 		return expireDate;
 	}
 
 	/**
 	 * @param expireDate the expireDate to set
 	 */
-	public void setExpireDate(LocalDateTime expireDate) {
+	public void setExpireDate(LocalDate expireDate) {
 		this.expireDate = expireDate;
 	}
 
@@ -82,10 +86,74 @@ public class DietPrivateActivity implements Serializable {
 		this.weightObjective = weightObjective;
 	}
 
-	@Override
-	public String toString() {
-		return "DietPrivateActivity [id=" + id + ", name=" + name + ", expireDate=" + expireDate + ", weightObjective="
-				+ weightObjective + "]";
+	public String getAthlete() {
+		return athlete;
+	}
+
+	public void setAthlete(String athlete) {
+		this.athlete = athlete;
+	}
+
+	public LocalDate getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDate createDate) {
+		this.createDate = createDate;
+	}
+
+	@Column(name = "private_activity_mode")
+	@Enumerated(EnumType.STRING)
+	public DietPrivateActivityMode getPrivateActivityMode() {
+		return privateActivityMode;
+	}
+
+	public void setPrivateActivityMode(DietPrivateActivityMode privateActivityMode) {
+		this.privateActivityMode = privateActivityMode;
+	}
+
+	@Column(name = "private_register_mode")
+	@Enumerated(EnumType.STRING)
+	public DietPrivateRegisterMode getPrivateRegisterMode() {
+		return privateRegisterMode;
+	}
+
+	public void setPrivateRegisterMode(DietPrivateRegisterMode privateRegisterMode) {
+		this.privateRegisterMode = privateRegisterMode;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@OneToMany
+	@JoinColumn(name = "register_private_id")
+	public List<DietRegister> getRegisters() {
+		return registers;
+	}
+
+	public void setRegisters(List<DietRegister> registers) {
+		this.registers = registers;
+	}
+
+	public LocalDate getActualProgressiveDate() {
+		return actualProgressiveDate;
+	}
+
+	public void setActualProgressiveDate(LocalDate actualProgressiveDate) {
+		this.actualProgressiveDate = actualProgressiveDate;
+	}
+
+	public LocalDate getNextProgressiveDate() {
+		return nextProgressiveDate;
+	}
+
+	public void setNextProgressiveDate(LocalDate nextProgressiveDate) {
+		this.nextProgressiveDate = nextProgressiveDate;
 	}
 
 }
