@@ -15,7 +15,7 @@
 	<name>Diet Toegether</name>
 	<description>Proyecto para mejorar la salud en grupo</description>
 	<properties>
-		<java.version>15</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

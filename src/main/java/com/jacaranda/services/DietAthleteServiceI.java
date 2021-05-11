@@ -7,6 +7,7 @@ import com.jacaranda.model.DietAthlete;
 import com.jacaranda.model.DietFriendRequest;
 import com.jacaranda.model.dto.DietAthleteDTO;
 import com.jacaranda.model.dto.DietAthleteRankingDto;
+import com.jacaranda.model.dto.DietProfileAthleteDto;
 
 public interface DietAthleteServiceI {
 
@@ -28,4 +29,6 @@ public interface DietAthleteServiceI {
 	public List<String> getAthletesByInitials(String initials);
 
 	public DietAthleteRankingDto getAthleteRanking(String username);
+
+	public DietProfileAthleteDto updateProfileData(String username, DietProfileAthleteDto profileAthleteDto);
 }
