@@ -233,8 +233,8 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 		return progressBarInfo;
 	}
 
-//	@Scheduled(cron = "0 0 2 * * *", zone = "Europe/Madrid")
-	@Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
+	@Scheduled(cron = "0 0 2 * * *", zone = "Europe/Madrid")
+	// @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Madrid")
 	public void checkProgressiveRegister() {
 
 		LocalDate localDate = LocalDate.now();// For reference
