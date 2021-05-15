@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.jacaranda.model.DietAthlete;
 import com.jacaranda.model.DietPrivateActivity;
 import com.jacaranda.model.DietPrivateActivityMode;
 import com.jacaranda.model.DietPrivateRegisterMode;
@@ -577,6 +578,33 @@ public class DietPrivateActivityServiceImpl implements DietPrivateActivityServic
 
 		return registerToCreate;
 
+	}
+
+	@Override
+	public DietAthlete getOutPrivateActivity(String username) {
+
+		DietUser user = userRepo.findByUsername(username).get();
+
+		if (user.getAthleteId().getActualPrivateActivity() != null
+				&& user.getAthleteId().getActualPrivateActivity().getEnabled() == Boolean.TRUE) {
+			user.getAthleteId()
+					.setTotalPoints(user.getAthleteId().getTotalPoints() + user.getAthleteId().getGamePoints());
+			user.getAthleteId().setGamePoints(0.0);
+
+			user.getAthleteId().getActualPrivateActivity().setEnabled(Boolean.FALSE);
+
+			user.getAthleteId().getPrivateActivities().add(user.getAthleteId().getActualPrivateActivity());
+
+			privateActivityRepo.save(user.getAthleteId().getActualPrivateActivity());
+
+			user.getAthleteId().setActualPrivateActivity(null);
+
+			athleteRepo.save(user.getAthleteId());
+			
+			userRepo.save(user);
+		}
+
+		return user.getAthleteId();
 	}
 
 }
