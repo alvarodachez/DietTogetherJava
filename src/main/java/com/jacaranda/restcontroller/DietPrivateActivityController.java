@@ -19,33 +19,40 @@ import com.jacaranda.services.DietPrivateActivityServiceI;
 @RequestMapping("/private-activity")
 @CrossOrigin(origins = "*")
 public class DietPrivateActivityController {
-	
+
 	@Autowired
 	DietPrivateActivityServiceI privateActivityService;
 
 	@PostMapping("/create-private-activity/{username}")
-	public ResponseEntity<?> createPrivateActivity(@PathVariable String username, @RequestBody DietPrivateActivity privateActivity){
-		
+	public ResponseEntity<?> createPrivateActivity(@PathVariable String username,
+			@RequestBody DietPrivateActivity privateActivity) {
+
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(privateActivityService.createPrivateActivity(username, privateActivity));
-		
+
 	}
-	
+
 	@PostMapping("/create-register/{username}")
-	public ResponseEntity<?> createRegister(@PathVariable String username, @RequestBody DietRegister register){
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(privateActivityService.createRegister(username, register));
+	public ResponseEntity<?> createRegister(@PathVariable String username, @RequestBody DietRegister register) {
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(privateActivityService.createRegister(username, register));
 	}
-	
+
 	@GetMapping("/get-private-activity/{username}")
-	public ResponseEntity<?> getPrivateActivity(@PathVariable String username){
-		
+	public ResponseEntity<?> getPrivateActivity(@PathVariable String username) {
+
 		return ResponseEntity.status(HttpStatus.OK).body(privateActivityService.getPrivateActivity(username));
 	}
-	
+
 	@GetMapping("/get-progress-bar/{username}")
-	public ResponseEntity<?> getProgressBar(@PathVariable String username){
-		
+	public ResponseEntity<?> getProgressBar(@PathVariable String username) {
+
 		return ResponseEntity.status(HttpStatus.OK).body(privateActivityService.getProgressBar(username));
+	}
+
+	@PostMapping("/get-out/{username}")
+	public ResponseEntity<?> getOutPrivateActivity(@PathVariable String username) {
+		return ResponseEntity.status(HttpStatus.OK).body(privateActivityService.getOutPrivateActivity(username));
 	}
 }
